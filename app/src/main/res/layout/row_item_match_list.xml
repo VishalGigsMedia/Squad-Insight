@@ -31,13 +31,15 @@
             tools:text="2nd Test Match Team Prediction" />
 
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivFirstTeam"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:src="@mipmap/ic_launcher"
+            app:civ_border_width="@dimen/_1sdp"
+            app:civ_border_color="@color/gray_500"
             app:layout_constraintBottom_toTopOf="@+id/tvDateTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
@@ -91,17 +93,18 @@
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
             tools:text="NZ" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivSecondTeam"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:src="@mipmap/ic_launcher"
+            app:civ_border_width="@dimen/_1sdp"
+            app:civ_border_color="@color/gray_500"
             app:layout_constraintBottom_toTopOf="@+id/tvDateTime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
-
 
         <TextView
             android:id="@+id/tvDateTime"

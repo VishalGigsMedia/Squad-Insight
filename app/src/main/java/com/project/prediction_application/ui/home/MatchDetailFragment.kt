@@ -5,9 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.prediction_application.MainActivity
+import com.project.prediction_application.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_application.databinding.FragmentMatchDetailsBinding
+import com.project.prediction_application.ui.home.adapter.MatchDetailsAdapter
 
 class MatchDetailFragment : Fragment() {
+
+    private var callback: OnCurrentFragmentVisibleListener? = null
+
+    private lateinit var layoutManager: LinearLayoutManager
+    private var list: ArrayList<String> = ArrayList()
+    private var adapter: MatchDetailsAdapter? = null
 
     private var mBinding: FragmentMatchDetailsBinding? = null
     private val binding get() = mBinding!!
@@ -23,8 +34,24 @@ class MatchDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
+    private fun init() {
+        callback?.onSetToolbarTitle(true, MatchDetailFragment::class.java.simpleName)
+
+        layoutManager = LinearLayoutManager(context)
+        mBinding?.rvMatchDetails?.layoutManager = layoutManager
+        adapter = MatchDetailsAdapter(
+            context as FragmentActivity, list
+        )
+        mBinding?.rvMatchDetails?.adapter = adapter
+        adapter?.notifyDataSetChanged()
+    }
+
+    fun setOnCurrentFragmentVisibleListener(activity: MainActivity) {
+        callback = activity
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

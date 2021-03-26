@@ -1,13 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
-    defaultConfig {
+    /*defaultConfig {
         applicationId "com.project.prediction_application"
         minSdkVersion 23
         targetSdkVersion 30
@@ -15,7 +16,31 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }*/
+
+    flavorDimensions "version"
+
+    productFlavors {
+        production {
+            dimension "version"
+            applicationId 'com.project.prediction_application'
+            minSdkVersion 23
+            targetSdkVersion 30
+            versionCode 2
+            versionName "1.2"
+        }
+
+        devlopment {
+            dimension "version"
+            applicationId 'com.project.prediction_application'
+            minSdkVersion 23
+            targetSdkVersion 30
+            versionCode 1
+            versionName "1.5"
+            testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        }
     }
+
 
     buildFeatures {
         viewBinding true
@@ -54,7 +79,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
     //Dagger
     implementation 'com.google.dagger:dagger:2.28'
-//    kapt 'com.google.dagger:dagger-compiler:2.28'
+    kapt 'com.google.dagger:dagger-compiler:2.28'
+    kapt "com.google.dagger:dagger-android-processor:2.28"
     // for Multi dex support(to avoid dex leakage error)
     implementation 'androidx.multidex:multidex:2.0.1'
     //Dependency injection
@@ -81,6 +107,8 @@ dependencies {
 
     //for Base64 encryption/decryption
     implementation 'commons-codec:commons-codec:1.10'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.4'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'

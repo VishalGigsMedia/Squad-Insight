@@ -11,17 +11,19 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.project.prediction_application.MainActivity
 import com.project.prediction_application.R
 import com.project.prediction_application.common_helper.DefaultHelper
+import com.project.prediction_application.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_application.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
 
-
     private lateinit var homeViewModel: HomeViewModel
     private var mBinding: FragmentHomeBinding? = null
     private val binding get() = mBinding!!
+    private var callback: OnCurrentFragmentVisibleListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +36,17 @@ class HomeFragment : Fragment() {
 
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         println("getDeviceId: ${DefaultHelper.getDeviceId(context)} ")
+        callback?.onSetToolbarTitle(true, HomeFragment::class.java.simpleName)
         setAdapter()
     }
 
+    fun setOnCurrentFragmentVisibleListener(activity: MainActivity) {
+        callback = activity
+    }
 
     private fun setAdapter() {
 
@@ -87,14 +94,14 @@ class HomeFragment : Fragment() {
 
         override fun getItem(position: Int): Fragment {
             var fragment: Fragment? = null
-            /*when (position) {
-                0 -> fragment = AboutUsFragment()
-                1 -> fragment = PrivacyPolicyFragment()
-                2 -> fragment = TermsConditionFragment()
+            when (position) {
+                0 -> fragment = CricketMatchListFragment()
+                1 -> fragment = FootballMatchListFragment()
+                2 -> fragment = BasketballMatchListFragment()
 
             }
-            return fragment!!*/
-            return MatchListFragment()
+            return fragment!!
+            // return MatchListFragment()
 
         }
 

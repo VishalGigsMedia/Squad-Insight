@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
@@ -142,7 +144,7 @@ object DefaultHelper {
         if (addToBackStack) {
             try {
                 context?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_container_view_tag, fragment)
+                    ?.replace(R.id.nav_host_fragment, fragment)
                     ?.addToBackStack(MainActivity::class.java.simpleName)?.commit()
             } catch (ile: IllegalStateException) {
                 context?.supportFragmentManager?.beginTransaction()
@@ -159,6 +161,22 @@ object DefaultHelper {
                     ?.replace(R.id.nav_host_fragment, fragment)?.commitAllowingStateLoss()
             }
         }
+    }
+
+    fun isOnline(): Boolean {
+        val haveConnectedWifi = false
+        val haveConnectedMobile = false
+        val cm = Application.instance?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val netInfo = cm.activeNetwork
+        if (netInfo != null) {
+            val nc = cm.getNetworkCapabilities(netInfo)
+
+            return (nc?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) != null || nc?.hasTransport(
+                NetworkCapabilities.TRANSPORT_WIFI) != null)
+        }
+
+        return haveConnectedWifi || haveConnectedMobile
     }
 
 }
