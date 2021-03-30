@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854351443583",
+    "project_id": "prediction-hub-c6059",
+    "storage_bucket": "prediction-hub-c6059.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854351443583:android:a2971377a8ffd24b10b14a",
+        "android_client_info": {
+          "package_name": "com.prediction_hub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854351443583-t02klegans3app75vde2jure3g1qgh6b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDrqGh3giXorS4BlkOLmkKAPptmxx0MM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854351443583-t02klegans3app75vde2jure3g1qgh6b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

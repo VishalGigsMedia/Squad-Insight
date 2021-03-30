@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Prediction Application</string>
+    <string name="app_name">Prediction Hub</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Prediction Application</string>
@@ -26,4 +26,14 @@
     <string name="kindly_find_the_application">Kindly find the application on </string>
 
     <string name="send_to">Send To</string>
+
+    <string name="no_data_available">No Data Available</string>
+    <string name="no_internet">No Internet</string>
+
+
+    <!--fcm variables-->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="true">Prediction Hub</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
+    <string name="fcm_message">FCM Message</string>
 </resources>

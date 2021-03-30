@@ -14,4 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/clNoData"
+        layout="@layout/custom_no_data" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
