@@ -1,10 +1,12 @@
-package com.project.prediction_hub.ui.home
+package com.prediction_hub.ui.home
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.prediction_hub.retrofit.APIService
+import com.prediction_hub.ui.home.adapter.MatchListAdapter
+import com.prediction_hub.ui.home.model.MatchListModel
+import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
 import com.project.prediction_hub.common_helper.Application
 import com.project.prediction_hub.common_helper.ConstantHelper
@@ -20,10 +26,7 @@ import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
 import com.project.prediction_hub.common_helper.DefaultHelper.forceLogout
 import com.project.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
-import com.prediction_hub.retrofit.APIService
-import com.prediction_hub.ui.home.model.MatchListModel
-import com.prediction_hub.ui.home.adapter.MatchListAdapter
-import com.project.prediction_hub.ui.home.view_model.MatchListViewModel
+import com.project.prediction_hub.ui.home.MatchDetailFragment
 import javax.inject.Inject
 
 class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickListener {
@@ -31,10 +34,17 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
     lateinit var apiService: APIService
 
     private lateinit var layoutManager: LinearLayoutManager
-    private var list: ArrayList<MatchListModel> = ArrayList()
+    private var list: ArrayList<MatchListModel.Data.Match> = ArrayList()
     private var adapter: MatchListAdapter? = null
 
     private var matchListClickListener: MatchListAdapter.MatchListClickListener? = null
+
+    private var offset = 0
+    private var nextLimit = 20
+    private var isLastPage: Boolean = false
+    private var isLoading: Boolean = false
+
+    private var fcmToken: String = ""
 
     private lateinit var viewModel: MatchListViewModel
     private var mBinding: FragmentMatchListBinding? = null
@@ -60,93 +70,49 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
     private fun init() {
         this.matchListClickListener = this
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        swipeToRefresh()
+        initRefreshData()
+    }
+
+    private fun swipeToRefresh() {
+        mBinding?.srl?.setProgressBackgroundColorSchemeColor(
+            ContextCompat.getColor(
+                context as FragmentActivity,
+                R.color.colorPrimary
+            )
+        )
+        mBinding?.srl?.setColorSchemeColors(Color.WHITE)
+
+        mBinding?.srl?.setOnRefreshListener {
+            initRefreshData()
+            mBinding?.srl?.isRefreshing = false
+        }
+    }
+
+    private fun initRefreshData() {
+        this.list.clear()
+        this.offset = 0
+        this.nextLimit = 20
+        setAdapter()
         getFcmToken()
+        addScrollListener()
+    }
 
-
-        //epoch time
-        /* val dt = Instant.ofEpochSecond(1510500494)
-             .atZone(ZoneId.systemDefault())
-             .toLocalDateTime()*/
-
-        /*val serverSideFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
-        val receivedDate = "2021-04-25 14:05:00"
-        val reformattedStr: String = formatter.format(serverSideFormat.parse(receivedDate))
-        println("formattedDate : $reformattedStr")*/
-
-        /*list.clear()
-        list.add("16-03-2021 14:10:00")
-        list.add("25-03-2021 14:11:00")
-        list.add("25-03-2021 14:12:00")
-        list.add("26-03-2021 14:13:00")
-        list.add("25-03-2021 14:11:00")
+    private fun setAdapter() {
         layoutManager = LinearLayoutManager(context)
         mBinding?.rvHome?.layoutManager = layoutManager
         adapter = MatchListAdapter(
             context as FragmentActivity, list,
-            matchListClickListener as MatchListFragment
+            matchListClickListener as CricketMatchListFragment
         )
         mBinding?.rvHome?.adapter = adapter
-        adapter?.notifyDataSetChanged()*/
+        adapter?.notifyDataSetChanged()
     }
 
-    private fun getMatchList(fcmToken: String) {
-        viewModel.getMatchList(context as FragmentActivity, apiService, 0, 10,fcmToken)
-            ?.observe(viewLifecycleOwner, { matchListModel ->
-                if (matchListModel != null) {
-
-                    if (matchListModel.force_logout != ConstantHelper.forceLogout) {
-                        forceLogout(context as FragmentActivity, "")
-                    }
-
-                    when (matchListModel.status) {
-                        ConstantHelper.success -> {
-                            matchListModel.data?.match_list?.let { setData(it) }
-                        }
-                        ConstantHelper.failed -> {
-                            setNoDataLayout(matchListModel.message.toString())
-                        }
-                        ConstantHelper.apiFailed -> {
-                            showToast(context, matchListModel.message.toString())
-                        }
-                        ConstantHelper.noInternet -> {
-                            setNoDataLayout(matchListModel.message.toString())
-                        }
-                        else -> {
-                            setNoDataLayout(matchListModel.message.toString())
-                        }
-                    }
-
-                }
-            })
-
-    }
-
-    private fun setData(matchList: List<MatchListModel.Data.Match>) {
-        if (matchList.isNotEmpty()) {
-            layoutManager = LinearLayoutManager(context)
-            mBinding?.rvHome?.layoutManager = layoutManager
-            adapter = MatchListAdapter(
-                context as FragmentActivity, matchList,
-                matchListClickListener as CricketMatchListFragment
-            )
-            mBinding?.rvHome?.adapter = adapter
-            adapter?.notifyDataSetChanged()
-
-            mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
-            mBinding?.rvHome?.visibility = View.VISIBLE
-        } else {
-            setNoDataLayout(getString(R.string.no_data_available))
-        }
-    }
-
-    private fun setNoDataLayout(msg: String) {
-        if (msg.isNotEmpty()) {
-            mBinding?.rvHome?.visibility = View.GONE
-            mBinding?.clNoData?.tvNoDataLayout?.text = decrypt(msg)
-            mBinding?.clNoData?.clNoDataParent?.visibility = View.VISIBLE
-        }
-    }
 
     override fun onMatchClick(id: String, browser: String) {
         DefaultHelper.openFragment(context as FragmentActivity, MatchDetailFragment(), true)
@@ -159,9 +125,121 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
                 return@OnCompleteListener
             }
             val token = task.result.toString()
-            println("FcmToken: $token")
-            getMatchList(token)
+            this.fcmToken = token
+            getMatchList(fcmToken, offset, nextLimit)
 
         }).toString()
     }
+
+    private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
+        showLoader()
+        viewModel.getMatchList(context as FragmentActivity, apiService, offset, nextLimit, fcmToken)
+            ?.observe(viewLifecycleOwner, { matchListModel ->
+                hideLoader()
+                if (matchListModel != null) {
+
+                    if (matchListModel.force_logout != ConstantHelper.forceLogout) {
+                        forceLogout(context as FragmentActivity, "")
+                    }
+
+                    when (matchListModel.status) {
+                        ConstantHelper.success -> {
+                            this.offset = 20
+                            this.list =
+                                matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>
+                            adapter?.addData(this.list)
+
+                            mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
+                            mBinding?.rvHome?.visibility = View.VISIBLE
+
+                        }
+                        ConstantHelper.failed -> {
+                            setNoDataLayout(decrypt(matchListModel.message.toString()))
+                        }
+                        ConstantHelper.apiFailed -> {
+                            showToast(context, decrypt(matchListModel.message.toString()))
+                        }
+                        ConstantHelper.noInternet -> {
+                            setNoDataLayout(matchListModel.message.toString())
+                        }
+                        else -> {
+                            setNoDataLayout(decrypt(matchListModel.message.toString()))
+                        }
+                    }
+
+                }
+            })
+    }
+
+
+    private fun addScrollListener() {
+        mBinding?.rvHome?.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+            override fun loadMoreItems() {
+                isLoading = true
+                //you have to call load more items to get more data
+                getMoreMatchList(fcmToken, offset, nextLimit)
+            }
+        })
+    }
+
+    private fun getMoreMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
+        print("loadMore : Loading More Data !!!.....")
+        mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.VISIBLE
+        viewModel.getMatchList(context as FragmentActivity, apiService, offset, nextLimit, fcmToken)
+            ?.observe(viewLifecycleOwner, { matchListModel ->
+                mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
+                if (matchListModel != null) {
+                    if (matchListModel.force_logout != ConstantHelper.forceLogout) {
+                        forceLogout(context as FragmentActivity, "")
+                    }
+
+                    when (matchListModel.status) {
+                        ConstantHelper.success -> {
+                            isLoading = false
+                            this.offset += 20
+                            adapter?.addData(matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>)
+                        }
+                        ConstantHelper.failed -> {
+                            showToast(context, decrypt(matchListModel.message.toString()))
+                        }
+                        ConstantHelper.apiFailed -> {
+                            showToast(context, decrypt(matchListModel.message.toString()))
+                        }
+                        ConstantHelper.noInternet -> {
+                            showToast(context, matchListModel.message.toString())
+                        }
+                        else -> {
+                            showToast(context, decrypt(matchListModel.message.toString()))
+                        }
+                    }
+
+                }
+            })
+
+    }
+
+    private fun setNoDataLayout(msg: String) {
+        if (msg.isNotEmpty()) {
+            mBinding?.rvHome?.visibility = View.GONE
+            mBinding?.clNoData?.tvNoDataLayout?.text = decrypt(msg)
+            mBinding?.clNoData?.clNoDataParent?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showLoader() {
+        mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoader() {
+        mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
+    }
+
 }

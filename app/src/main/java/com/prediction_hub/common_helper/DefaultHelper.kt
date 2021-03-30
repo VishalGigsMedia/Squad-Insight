@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.project.prediction_hub.BuildConfig
-import com.project.prediction_hub.MainActivity
+import com.prediction_hub.MainActivity
 import com.project.prediction_hub.R
 import org.apache.commons.codec.binary.Base64
 import javax.crypto.Cipher

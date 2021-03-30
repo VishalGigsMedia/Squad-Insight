@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clTop"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_150sdp"
+        android:layout_height="@dimen/_200sdp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +27,8 @@
         android:text="@string/menu_home"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clTop">
@@ -46,8 +46,8 @@
         android:text="@string/menu_about_us"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHome">
@@ -65,8 +65,8 @@
         android:text="@string/menu_rate_us"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAboutUs">
@@ -84,8 +84,8 @@
         android:text="@string/menu_privacy_policy"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRateUs">
@@ -103,8 +103,8 @@
         android:text="@string/menu_terms_condition"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPrivacyPolicy">

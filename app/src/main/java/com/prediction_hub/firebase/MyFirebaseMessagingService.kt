@@ -17,7 +17,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.project.prediction_hub.MainActivity
+import com.prediction_hub.MainActivity
 import com.project.prediction_hub.R
 import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
 

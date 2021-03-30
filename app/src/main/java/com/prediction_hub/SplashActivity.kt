@@ -3,10 +3,6 @@ package com.prediction_hub
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
-import com.project.prediction_hub.MainActivity
 import com.project.prediction_hub.databinding.ActivitySplashBinding
 import java.util.*
 import kotlin.concurrent.schedule

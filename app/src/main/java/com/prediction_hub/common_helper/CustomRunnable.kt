@@ -1,4 +1,4 @@
-package com.project.prediction_hub.common_helper
+package com.prediction_hub.common_helper
 
 import android.annotation.SuppressLint
 import android.os.Handler
@@ -84,8 +84,28 @@ class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: St
                 //millisUntilFinished = 0
                 holder.text = "Match is ongoing"
             } else {
+                var hrs = ""
+                var minutes = ""
+                var second = ""
+                hrs = if (differenceInHours < 10) {
+                    "0$differenceInHours"
+                } else {
+                    differenceInHours.toString()
+                }
+                minutes = if (differenceInMinutes < 10) {
+                    "0$differenceInMinutes"
+                } else {
+                    differenceInMinutes.toString()
+                }
+                second = if (differenceInSeconds < 10) {
+                    "0$differenceInSeconds"
+                } else {
+                    differenceInSeconds.toString()
+                }
 
-                val timeLeft = "$differenceInHours : $differenceInMinutes : $differenceInSeconds"
+
+                //val timeLeft = "$differenceInHours : $differenceInMinutes : $differenceInSeconds"
+                val timeLeft = "$hrs : $minutes : $second"
                 holder.text = timeLeft
                 //millisUntilFinished -= 1000
                 handler.postDelayed(this, 100)

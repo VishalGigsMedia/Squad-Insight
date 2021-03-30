@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.project.prediction_hub.MainActivity
+import com.prediction_hub.MainActivity
 import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.FragmentMatchDetailsBinding
 import com.project.prediction_hub.ui.home.adapter.MatchDetailsAdapter

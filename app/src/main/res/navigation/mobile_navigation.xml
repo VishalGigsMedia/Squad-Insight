@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.project.prediction_hub.ui.home.HomeFragment"
+        android:name="com.prediction_hub.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nav_privacy_policy"
-        android:name="com.project.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment"
+        android:name="com.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment"
         android:label="@string/menu_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
 

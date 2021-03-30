@@ -9,19 +9,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.prediction_hub.common_helper.CustomRunnable
-import com.prediction_hub.ui.home.CricketMatchListFragment
+import com.prediction_hub.ui.home.FootballMatchListFragment
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
 import com.project.prediction_hub.common_helper.ConstantHelper
-import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.project.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.databinding.RowItemMatchListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MatchListAdapter(
+class FootballMatchListAdapter(
     private val context: Context,
     private val list: ArrayList<MatchListModel.Data.Match>,
-    private val matchListClickListener: CricketMatchListFragment
+    private val matchListClickListener: FootballMatchListFragment
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -66,32 +66,36 @@ class MatchListAdapter(
         if (holder is ItemViewHolder) {
 
             try {
-                if (decrypt(list[position].title).isNotEmpty()) {
-                    holder.itemOffersBinding.tvTitle.text = decrypt(list[position].title)
+                if (DefaultHelper.decrypt(list[position].title).isNotEmpty()) {
+                    holder.itemOffersBinding.tvTitle.text =
+                        DefaultHelper.decrypt(list[position].title)
                 }
 
-                if (decrypt(list[position].team1.short_name).isNotEmpty()) {
+                if (DefaultHelper.decrypt(list[position].team1.short_name).isNotEmpty()) {
                     holder.itemOffersBinding.tvFirstTeamName.text =
-                        decrypt(list[position].team1.short_name)
+                        DefaultHelper.decrypt(list[position].team1.short_name)
                 }
 
-                if (decrypt(list[position].team2.short_name).isNotEmpty()) {
+                if (DefaultHelper.decrypt(list[position].team2.short_name).isNotEmpty()) {
                     holder.itemOffersBinding.tvSecondTeamName.text =
-                        decrypt(list[position].team2.short_name)
+                        DefaultHelper.decrypt(list[position].team2.short_name)
                 }
 
-                if (decrypt(list[position].team1.logo).isNotEmpty()) {
-                    Glide.with(context).load(decrypt(list[position].team1.logo)).centerCrop()
+                if (DefaultHelper.decrypt(list[position].team1.logo).isNotEmpty()) {
+                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team1.logo))
+                        .centerCrop()
                         .into(holder.itemOffersBinding.ivFirstTeam)
                 }
 
-                if (decrypt(list[position].team2.logo).isNotEmpty()) {
-                    Glide.with(context).load(decrypt(list[position].team2.logo)).centerCrop()
+                if (DefaultHelper.decrypt(list[position].team2.logo).isNotEmpty()) {
+                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team2.logo))
+                        .centerCrop()
                         .into(holder.itemOffersBinding.ivSecondTeam)
                 }
 
-                if (decrypt(list[position].match_date).isNotEmpty()) {
-                    val receivedTime = decrypt(list[position].match_date) //"25-03-2021 14:05:00"
+                if (DefaultHelper.decrypt(list[position].match_date).isNotEmpty()) {
+                    val receivedTime =
+                        DefaultHelper.decrypt(list[position].match_date) //"25-03-2021 14:05:00"
                     val reformattedStr: String =
                         formatter.format(serverSideFormat.parse(receivedTime))
                     /*if (position < 2) {
@@ -161,12 +165,4 @@ class MatchListAdapter(
         fun onMatchClick(id: String, browser: String)
     }
 
-    //Unix seconds
-    /* val unixSeconds: Long = 1617996600
-     val date = Date(unixSeconds * 1000L)
-     val jdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss z")
-     jdf.timeZone = TimeZone.getTimeZone("GMT") // -4
-     val javaDate = jdf.format(date)
-     val hrs = javaDate.split(" ")[1]
-     println("javaDate : $javaDate hrs: $hrs")*/
 }

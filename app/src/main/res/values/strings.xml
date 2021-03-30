@@ -36,4 +36,7 @@
     <string name="default_notification_channel_name" translatable="true">Prediction Hub</string>
     <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
     <string name="fcm_message">FCM Message</string>
+
+    <string name="plz_click_back_again_to_exit">Please click BACK again to exit</string>
+
 </resources>

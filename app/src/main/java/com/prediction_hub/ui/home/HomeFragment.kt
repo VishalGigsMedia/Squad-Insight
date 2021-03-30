@@ -1,4 +1,4 @@
-package com.project.prediction_hub.ui.home
+package com.prediction_hub.ui.home
 
 import android.content.Context
 import android.os.Bundle
@@ -11,8 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.prediction_hub.ui.home.HomeViewModel
-import com.project.prediction_hub.MainActivity
+import com.prediction_hub.MainActivity
 import com.project.prediction_hub.R
 import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.FragmentHomeBinding
@@ -68,13 +67,13 @@ class HomeFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 /*when (position) {
                     0 -> {
-                        AboutUsFragment()
+                        CricketMatchListFragment()
                     }
                     1 -> {
-                        PrivacyPolicyFragment()
+                        FootballMatchListFragment()
                     }
                     2 -> {
-                        TermsConditionFragment()
+                        BasketballMatchListFragment()
                     }
                 }*/
             }

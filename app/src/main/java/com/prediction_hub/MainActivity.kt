@@ -1,4 +1,4 @@
-package com.project.prediction_hub
+package com.prediction_hub
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -10,16 +10,19 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.prediction_hub.ui.home.HomeFragment
+import com.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment
+import com.project.prediction_hub.R
 import com.project.prediction_hub.common_helper.DefaultHelper.hideKeyboard
 import com.project.prediction_hub.common_helper.DefaultHelper.openFragment
 import com.project.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.ActivityMainBinding
 import com.project.prediction_hub.ui.about_us.AboutUsFragment
-import com.project.prediction_hub.ui.home.HomeFragment
 import com.project.prediction_hub.ui.home.MatchDetailFragment
-import com.project.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment
 import com.project.prediction_hub.ui.terms_condition.TermsConditionFragment
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
@@ -164,5 +167,26 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.send_to)))
     }
 
+    private var doubleBackToExitPressedOnce = false
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            doubleBackToExit()
+            Timer().schedule(2000) {
+                doubleBackToExitPressedOnce = false
+            }
+        }
+    }
+
+    private fun doubleBackToExit() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        showToast(this, getString(R.string.plz_click_back_again_to_exit))
+    }
 
 }
