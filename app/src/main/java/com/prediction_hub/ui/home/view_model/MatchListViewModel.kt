@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.prediction_hub.retrofit.APIService
+import com.prediction_hub.ui.home.model.MatchDetailsModel
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.repository.MatchListRepository
 
@@ -11,9 +12,10 @@ class MatchListViewModel : ViewModel() {
 
     private val matchListRepository: MatchListRepository = MatchListRepository()
     private var matchListModel: LiveData<MatchListModel>? = null
+    private var matchDetailsModel: LiveData<MatchDetailsModel>? = null
 
 
-    fun getMatchList(
+    fun getCricketMatchList(
         context: Context,
         apiService: APIService,
         offset: Int,
@@ -21,7 +23,13 @@ class MatchListViewModel : ViewModel() {
         fcmToken: String
     ): LiveData<MatchListModel>? {
         matchListModel =
-            matchListRepository.getMatchList(context, apiService, offset, nextLimit, fcmToken)
+            matchListRepository.getCricketMatchList(
+                context,
+                apiService,
+                offset,
+                nextLimit,
+                fcmToken
+            )
         return matchListModel
     }
 
@@ -58,6 +66,17 @@ class MatchListViewModel : ViewModel() {
             fcmToken
         )
         return matchListModel
+    }
+
+    fun getMatchDetails(
+        context: Context,
+        apiService: APIService,
+        matchId: String,
+        matchType: String
+    ): LiveData<MatchDetailsModel>? {
+        matchDetailsModel =
+            matchListRepository.getMatchDetails(context, apiService, matchId, matchType)
+        return matchDetailsModel
     }
 
 }

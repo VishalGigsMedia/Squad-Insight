@@ -1,12 +1,12 @@
-package com.project.prediction_hub.common_helper
+package com.prediction_hub.common_helper
 
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.prediction_hub.dagger.AppComponent
+import com.prediction_hub.dagger.DaggerAppComponent
 import com.project.prediction_hub.R
-import com.project.prediction_hub.dagger.AppComponent
 import com.project.prediction_hub.dagger.AppModule
-import com.project.prediction_hub.dagger.DaggerAppComponent
 import com.project.prediction_hub.dagger.RetrofitModule
 
 
@@ -14,11 +14,11 @@ import com.project.prediction_hub.dagger.RetrofitModule
 class Application : Application() {
 
     companion object {
-        public var instance: com.project.prediction_hub.common_helper.Application? = null
+        public var instance: com.prediction_hub.common_helper.Application? = null
         lateinit var mComponent: AppComponent
         var appContext: Context? = null
 
-        fun get(): com.project.prediction_hub.common_helper.Application? {
+        fun get(): com.prediction_hub.common_helper.Application? {
             return instance
         }
     }

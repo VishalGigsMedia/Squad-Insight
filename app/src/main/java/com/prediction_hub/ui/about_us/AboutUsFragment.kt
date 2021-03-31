@@ -1,4 +1,4 @@
-package com.project.prediction_hub.ui.about_us
+package com.prediction_hub.ui.about_us
 
 import android.annotation.SuppressLint
 import android.os.Bundle

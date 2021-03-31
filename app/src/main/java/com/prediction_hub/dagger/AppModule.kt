@@ -1,7 +1,7 @@
 package com.project.prediction_hub.dagger
 
 
-import com.project.prediction_hub.common_helper.Application
+import com.prediction_hub.common_helper.Application
 import com.prediction_hub.retrofit.APIService
 import dagger.Module
 import dagger.Provides

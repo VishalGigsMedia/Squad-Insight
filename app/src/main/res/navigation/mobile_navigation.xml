@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_about_us"
-        android:name="com.project.prediction_hub.ui.about_us.AboutUsFragment"
+        android:name="com.prediction_hub.ui.about_us.AboutUsFragment"
         android:label="@string/menu_about_us"
         tools:layout="@layout/fragment_about_us" />
 
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_terms_condition"
-        android:name="com.project.prediction_hub.ui.terms_condition.TermsConditionFragment"
+        android:name="com.prediction_hub.ui.terms_condition.TermsConditionFragment"
         android:label="@string/menu_terms_condition"
         tools:layout="@layout/fragment_terms_condition" />
 

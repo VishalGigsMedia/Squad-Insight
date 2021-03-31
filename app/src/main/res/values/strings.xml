@@ -39,4 +39,7 @@
 
     <string name="plz_click_back_again_to_exit">Please click BACK again to exit</string>
 
+    <string name="dismiss">Dismiss</string>
+    <string name="err_msg_match_not_available">Decision for covering this match is not decided by the admin. Please check again after some time.</string>
+
 </resources>

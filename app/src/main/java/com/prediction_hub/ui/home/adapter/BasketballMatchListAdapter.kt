@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.common_helper.CustomRunnable
 import com.prediction_hub.ui.home.BasketballMatchListFragment
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.databinding.RowItemMatchListBinding
 import java.text.SimpleDateFormat
@@ -144,9 +144,12 @@ class BasketballMatchListAdapter(
                     }
                 }
 
-
                 holder.itemOffersBinding.cvParent.setOnClickListener {
-                    matchListClickListener.onMatchClick("", "")
+                    if (DefaultHelper.decrypt(list[position].match_details_available) == "1") {
+                        matchListClickListener.onMatchClick(list[position].id, "basketball")
+                    } else {
+                        matchListClickListener.onShowErrorDialog()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -162,7 +165,8 @@ class BasketballMatchListAdapter(
 
 
     interface MatchListClickListener {
-        fun onMatchClick(id: String, browser: String)
+        fun onMatchClick(id: String, matchType: String)
+        fun onShowErrorDialog()
     }
 
 }

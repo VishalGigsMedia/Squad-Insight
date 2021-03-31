@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,15 +11,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_5sdp"
-        android:text="@string/match_details"
+        android:gravity="start"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/cvMatchDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/match_details">
 
     </TextView>
 
@@ -44,18 +47,88 @@
             android:padding="@dimen/_5sdp">
 
             <TextView
-                android:id="@+id/tvMatch"
+                android:id="@+id/tvFirstTeamName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="The id you use in add() or replace() should be the id of the container in activity_main.xml you want to place the fragment into. The fragment's xml layout hasn't been loaded yet, and is only accessed by the Fragment, so you won't be able to reference any views with id's in the fragment itself from the activity."
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mumbai">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvFirstTeamDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
                 android:textAllCaps="false"
                 android:textColor="@color/gray_500"
                 android:textSize="@dimen/_12ssp"
                 android:textStyle="normal"
+                android:visibility="gone"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/tvFirstTeamName"
+                tools:text="Mumbai Indians ki team">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvSecondTeamName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvFirstTeamDescription"
+                tools:text="Mumbai">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvSecondTeamDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_500"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="normal"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSecondTeamName"
+                tools:text="Mumbai Indians ki team">
+
+            </TextView>
+
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_500"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="normal"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSecondTeamDescription"
+                tools:text="The id you use in add() or replace() should be the id of the container in activity_main.xml you want to place the fragment into. The fragment's xml layout hasn't been loaded yet, and is only accessed by the Fragment, so you won't be able to reference any views with id's in the fragment itself from the activity.">
 
             </TextView>
 

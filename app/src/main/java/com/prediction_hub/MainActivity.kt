@@ -18,9 +18,9 @@ import com.project.prediction_hub.common_helper.DefaultHelper.openFragment
 import com.project.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.ActivityMainBinding
-import com.project.prediction_hub.ui.about_us.AboutUsFragment
-import com.project.prediction_hub.ui.home.MatchDetailFragment
-import com.project.prediction_hub.ui.terms_condition.TermsConditionFragment
+import com.prediction_hub.ui.about_us.AboutUsFragment
+import com.prediction_hub.ui.home.MatchDetailFragment
+import com.prediction_hub.ui.terms_condition.TermsConditionFragment
 import java.util.*
 import kotlin.concurrent.schedule
 

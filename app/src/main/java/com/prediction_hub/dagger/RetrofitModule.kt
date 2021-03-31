@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 import com.project.prediction_hub.BuildConfig
-import com.project.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.common_helper.PreferenceHelper
 import dagger.Module
 import dagger.Provides

@@ -3,27 +3,29 @@ package com.prediction_hub.ui.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.prediction_hub.common_helper.Application
+import com.prediction_hub.common_helper.BundleKey
+import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.FootballMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.Application
-import com.project.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.common_helper.DefaultHelper
+import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.project.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
-import com.project.prediction_hub.ui.home.MatchDetailFragment
 import javax.inject.Inject
 
 class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchListClickListener {
@@ -111,8 +113,36 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     }
 
 
-    override fun onMatchClick(id: String, browser: String) {
-        DefaultHelper.openFragment(context as FragmentActivity, MatchDetailFragment(), true)
+    override fun onMatchClick(id: String, matchType: String) {
+        val matchDetailFragment = MatchDetailFragment()
+        val bundle = Bundle()
+        bundle.putString(BundleKey.MatchId.toString(), id)
+        bundle.putString(BundleKey.MatchType.toString(), matchType)
+        matchDetailFragment.arguments = bundle
+        DefaultHelper.openFragment(context as FragmentActivity, matchDetailFragment, true)
+    }
+
+    override fun onShowErrorDialog() {
+        showMatchDetailNotFound()
+    }
+
+    private fun showMatchDetailNotFound() {
+        val wrappedContext =
+            ContextThemeWrapper(context, R.style.ThemeOverlay_Demo_BottomSheetDialog)
+        val dialog = BottomSheetDialog(wrappedContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_match_detial_not_available)
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        val height = ViewGroup.LayoutParams.WRAP_CONTENT
+        dialog.window!!.setLayout(width, height)
+        val tvDismiss = dialog.findViewById<TextView>(R.id.tvDismiss)
+        tvDismiss?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+
     }
 
     private fun getFcmToken(): String {
@@ -160,10 +190,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
                             setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
                         }
                         ConstantHelper.apiFailed -> {
-                            DefaultHelper.showToast(
-                                context,
-                                DefaultHelper.decrypt(matchListModel.message.toString())
-                            )
+                            showToast(context, decrypt(matchListModel.message.toString()))
                         }
                         ConstantHelper.noInternet -> {
                             setNoDataLayout(matchListModel.message.toString())

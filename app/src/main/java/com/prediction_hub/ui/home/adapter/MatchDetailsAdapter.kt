@@ -1,17 +1,19 @@
-package com.project.prediction_hub.ui.home.adapter
+package com.prediction_hub.ui.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.prediction_hub.ui.home.model.MatchDetailsModel
 import com.project.prediction_hub.R
+import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
 import com.project.prediction_hub.databinding.RowItemMatchDetailsBinding
 import java.util.*
 
 class MatchDetailsAdapter(
     private val context: Context,
-    private val list: ArrayList<String>?
+    private val list: ArrayList<MatchDetailsModel.Data.Prediction>?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     lateinit var mcontext: Context
@@ -23,7 +25,7 @@ class MatchDetailsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return 10//list!!.size
+        return list!!.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -44,9 +46,72 @@ class MatchDetailsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
 
-            // holder.itemOffersBinding.tvTitle.text = "2nd Test Match Team Prediction"
+            if (decrypt(list?.get(position)?.title.toString()).isNotEmpty()) {
+                holder.itemMatchDetailsBinding.tvTitle.text =
+                    decrypt(list?.get(position)?.title.toString())
+                holder.itemMatchDetailsBinding.tvTitle.visibility = View.VISIBLE
+            } else {
+                holder.itemMatchDetailsBinding.tvTitle.visibility = View.GONE
+            }
 
+            if (!checkNull(decrypt(list?.get(position)?.description.toString()))) {
+                holder.itemMatchDetailsBinding.tvDescription.text =
+                    decrypt(list?.get(position)?.description.toString())
+                holder.itemMatchDetailsBinding.tvDescription.visibility = View.VISIBLE
+            } else {
+                holder.itemMatchDetailsBinding.tvDescription.visibility = View.GONE
+            }
+
+            if (decrypt(list?.get(position)?.title.toString()) == "Playing Squad") {
+                holder.itemMatchDetailsBinding.tvDescription.visibility = View.GONE
+
+                if (!checkNull(decrypt(list?.get(position)?.team1_name.toString()))) {
+                    holder.itemMatchDetailsBinding.tvFirstTeamName.text =
+                        decrypt(list?.get(position)?.team1_name.toString())
+                    holder.itemMatchDetailsBinding.tvFirstTeamName.visibility = View.VISIBLE
+                } else {
+                    holder.itemMatchDetailsBinding.tvFirstTeamName.visibility = View.GONE
+                }
+
+                if (!checkNull(decrypt(list?.get(position)?.team1_description.toString()))) {
+                    holder.itemMatchDetailsBinding.tvFirstTeamDescription.text =
+                        decrypt(list?.get(position)?.team1_description.toString())
+                    holder.itemMatchDetailsBinding.tvFirstTeamDescription.visibility = View.VISIBLE
+                } else {
+                    holder.itemMatchDetailsBinding.tvFirstTeamDescription.visibility = View.GONE
+                }
+
+                if (!checkNull(decrypt(list?.get(position)?.team2_name.toString()))) {
+                    holder.itemMatchDetailsBinding.tvSecondTeamName.text =
+                        decrypt(list?.get(position)?.team2_name.toString())
+                    holder.itemMatchDetailsBinding.tvSecondTeamName.visibility = View.VISIBLE
+                } else {
+                    holder.itemMatchDetailsBinding.tvSecondTeamName.visibility = View.GONE
+                }
+
+                if (!checkNull(decrypt(list?.get(position)?.team2_description.toString()))) {
+                    holder.itemMatchDetailsBinding.tvSecondTeamDescription.text =
+                        decrypt(list?.get(position)?.team2_description.toString())
+                    holder.itemMatchDetailsBinding.tvSecondTeamDescription.visibility = View.VISIBLE
+                } else {
+                    holder.itemMatchDetailsBinding.tvSecondTeamDescription.visibility = View.GONE
+                }
+            }
         }
     }
 
+
+    private fun checkNull(str: String): Boolean {
+        if (str.isEmpty() && str == "null") {
+            return true
+        }
+        return false
+    }
+
+    fun addData(list: List<MatchDetailsModel.Data.Prediction>?) {
+        if (list != null) {
+            this.list?.addAll(list)
+        }
+        notifyDataSetChanged()
+    }
 }

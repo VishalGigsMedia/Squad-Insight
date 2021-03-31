@@ -15,7 +15,8 @@ data class MatchListModel(
             val team1: Team1,
             val team2: Team2,
             val title: String,
-            val venue: String
+            val venue: String,
+            val match_details_available: String
         ) {
             data class Team1(
                 val full_name: String,

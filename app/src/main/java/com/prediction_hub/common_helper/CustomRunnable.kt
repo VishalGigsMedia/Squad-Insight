@@ -3,7 +3,7 @@ package com.prediction_hub.common_helper
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.widget.TextView
-import com.project.prediction_hub.common_helper.ConstantHelper.dateFormat
+import com.prediction_hub.common_helper.ConstantHelper.dateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

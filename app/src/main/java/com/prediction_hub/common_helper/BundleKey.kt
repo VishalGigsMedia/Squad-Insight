@@ -1,3 +1,3 @@
-package com.project.prediction_hub.common_helper
+package com.prediction_hub.common_helper
 
-enum class BundleKey { referralCode, mobile, appId, browser, videoId, title, availableAmount }
+enum class BundleKey { ReferralCode, Mobile, AppId, Browser, VideoId, Title, AvailableAmount, MatchId, MatchType}

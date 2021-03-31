@@ -3,41 +3,41 @@ package com.prediction_hub.ui.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.prediction_hub.common_helper.Application
+import com.prediction_hub.common_helper.BundleKey
+import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.retrofit.APIService
-import com.prediction_hub.ui.home.adapter.MatchListAdapter
+import com.prediction_hub.ui.home.adapter.CricketMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.Application
-import com.project.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
 import com.project.prediction_hub.common_helper.DefaultHelper.forceLogout
 import com.project.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
-import com.project.prediction_hub.ui.home.MatchDetailFragment
 import javax.inject.Inject
 
-class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickListener {
+class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListClickListener {
     @Inject
     lateinit var apiService: APIService
 
     private lateinit var layoutManager: LinearLayoutManager
     private var list: ArrayList<MatchListModel.Data.Match> = ArrayList()
-    private var adapter: MatchListAdapter? = null
+    private var adapter: CricketMatchListAdapter? = null
 
-    private var matchListClickListener: MatchListAdapter.MatchListClickListener? = null
+    private var matchListClickListener: CricketMatchListAdapter.MatchListClickListener? = null
 
     private var offset = 0
     private var nextLimit = 20
@@ -105,7 +105,7 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
     private fun setAdapter() {
         layoutManager = LinearLayoutManager(context)
         mBinding?.rvHome?.layoutManager = layoutManager
-        adapter = MatchListAdapter(
+        adapter = CricketMatchListAdapter(
             context as FragmentActivity, list,
             matchListClickListener as CricketMatchListFragment
         )
@@ -114,8 +114,37 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
     }
 
 
-    override fun onMatchClick(id: String, browser: String) {
-        DefaultHelper.openFragment(context as FragmentActivity, MatchDetailFragment(), true)
+    override fun onMatchClick(id: String, matchType: String) {
+        val matchDetailFragment = MatchDetailFragment()
+        val bundle = Bundle()
+        bundle.putString(BundleKey.MatchId.toString(), id)
+        bundle.putString(BundleKey.MatchType.toString(), matchType)
+        matchDetailFragment.arguments = bundle
+        DefaultHelper.openFragment(context as FragmentActivity, matchDetailFragment, true)
+    }
+
+    override fun onShowErrorDialog() {
+        showMatchDetailNotFound()
+    }
+
+    private fun showMatchDetailNotFound() {
+        val wrappedContext =
+            ContextThemeWrapper(context, R.style.ThemeOverlay_Demo_BottomSheetDialog)
+        val dialog = BottomSheetDialog(wrappedContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_match_detial_not_available)
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        val height = ViewGroup.LayoutParams.WRAP_CONTENT
+        dialog.window!!.setLayout(width, height)
+        val tvDismiss = dialog.findViewById<TextView>(R.id.tvDismiss)
+        tvDismiss?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
     }
 
     private fun getFcmToken(): String {
@@ -126,6 +155,7 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
             }
             val token = task.result.toString()
             this.fcmToken = token
+            println("fcmToken : $fcmToken")
             getMatchList(fcmToken, offset, nextLimit)
 
         }).toString()
@@ -133,7 +163,13 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
 
     private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
         showLoader()
-        viewModel.getMatchList(context as FragmentActivity, apiService, offset, nextLimit, fcmToken)
+        viewModel.getCricketMatchList(
+            context as FragmentActivity,
+            apiService,
+            offset,
+            nextLimit,
+            fcmToken
+        )
             ?.observe(viewLifecycleOwner, { matchListModel ->
                 hideLoader()
                 if (matchListModel != null) {
@@ -193,7 +229,13 @@ class CricketMatchListFragment : Fragment(), MatchListAdapter.MatchListClickList
     private fun getMoreMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
         print("loadMore : Loading More Data !!!.....")
         mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.VISIBLE
-        viewModel.getMatchList(context as FragmentActivity, apiService, offset, nextLimit, fcmToken)
+        viewModel.getCricketMatchList(
+            context as FragmentActivity,
+            apiService,
+            offset,
+            nextLimit,
+            fcmToken
+        )
             ?.observe(viewLifecycleOwner, { matchListModel ->
                 mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
                 if (matchListModel != null) {

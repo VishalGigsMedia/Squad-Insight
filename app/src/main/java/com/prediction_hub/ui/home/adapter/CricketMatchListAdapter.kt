@@ -12,13 +12,13 @@ import com.prediction_hub.common_helper.CustomRunnable
 import com.prediction_hub.ui.home.CricketMatchListFragment
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
 import com.project.prediction_hub.databinding.RowItemMatchListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MatchListAdapter(
+class CricketMatchListAdapter(
     private val context: Context,
     private val list: ArrayList<MatchListModel.Data.Match>,
     private val matchListClickListener: CricketMatchListFragment
@@ -142,7 +142,11 @@ class MatchListAdapter(
 
 
                 holder.itemOffersBinding.cvParent.setOnClickListener {
-                    matchListClickListener.onMatchClick("", "")
+                    if (decrypt(list[position].match_details_available) == "1") {
+                        matchListClickListener.onMatchClick(list[position].id, "cricket")
+                    } else {
+                        matchListClickListener.onShowErrorDialog()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -158,7 +162,8 @@ class MatchListAdapter(
 
 
     interface MatchListClickListener {
-        fun onMatchClick(id: String, browser: String)
+        fun onMatchClick(id: String, matchType: String)
+        fun onShowErrorDialog()
     }
 
     //Unix seconds

@@ -1,4 +1,4 @@
-package com.project.prediction_hub.ui.terms_condition
+package com.prediction_hub.ui.terms_condition
 
 import android.annotation.SuppressLint
 import android.os.Bundle

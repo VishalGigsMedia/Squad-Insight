@@ -1,10 +1,9 @@
-package com.project.prediction_hub.dagger
+package com.prediction_hub.dagger
 
-import com.project.prediction_hub.common_helper.Application
-import com.prediction_hub.ui.home.BasketballMatchListFragment
-import com.prediction_hub.ui.home.HomeFragment
-import com.prediction_hub.ui.home.CricketMatchListFragment
-import com.prediction_hub.ui.home.FootballMatchListFragment
+import com.prediction_hub.ui.home.*
+import com.prediction_hub.common_helper.Application
+import com.project.prediction_hub.dagger.AppModule
+import com.project.prediction_hub.dagger.RetrofitModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -22,5 +21,6 @@ interface AppComponent {
 
     fun inject(basketballMatchListFragment: BasketballMatchListFragment)
 
+    fun inject(matchDetailFragment: MatchDetailFragment)
 
 }
