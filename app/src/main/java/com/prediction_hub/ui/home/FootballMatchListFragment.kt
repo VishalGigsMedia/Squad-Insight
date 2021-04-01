@@ -127,7 +127,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
         val dialog = BottomSheetDialog(wrappedContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_match_detial_not_available)
+        dialog.setContentView(R.layout.match_detial_not_available_dialog)
         dialog.window?.setGravity(Gravity.BOTTOM)
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.WRAP_CONTENT

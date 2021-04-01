@@ -42,4 +42,8 @@
     <string name="dismiss">Dismiss</string>
     <string name="err_msg_match_not_available">Decision for covering this match is not decided by the admin. Please check again after some time.</string>
 
+    <string name="update_available">Update Available</string>
+    <string name="skip">Skip >>></string>
+    <string name="update">Update</string>
+
 </resources>

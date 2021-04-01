@@ -19,9 +19,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.BundleKey
-import com.project.prediction_hub.R
 import com.prediction_hub.common_helper.DefaultHelper.decrypt
-
+import com.project.prediction_hub.R
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -73,11 +72,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             if (bitmap != null) {
-                /*  showImageNotification(
-                      bitmap, title, description, notificationType, categoryId,
-                      loanId,
-                      externalUrl
-                  )*/
+                showImageNotification(bitmap, title, description, notificationType, externalUrl, matchId)
             } else {
                 sendNotification(
                     title, description, notificationType, externalUrl, matchId
@@ -150,20 +145,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             )
             notificationManager.createNotificationChannel(channel)
         }
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        /*val random = Random()
+        val notificationId = random.nextInt(9999 - 1000) + 1000*/
+        val notificationId = (Date().time / 1000L % Integer.MAX_VALUE).toInt()
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     private fun showImageNotification(
-        bitmap: Bitmap?, title: String, message: String, type: String, categoryId: String, loanId: String, externalUrl: String
+        bitmap: Bitmap?, title: String, message: String, notificationType: String, externalUrl: String, matchId: String
     ) {
-        //val intent: Intent? = null
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        /* intent.putExtra(NotificationType.NOTIFICATION_TYPE, notificationType)
-         intent.putExtra(NotificationType.CATEGORY_ID, categoryId)
-         intent.putExtra(NotificationType.LOAN_ID, loanId)
-         intent.putExtra(NotificationType.EXTERNAL_URL, externalUrl)*/
+        intent.putExtra(BundleKey.NotificationType.toString(), notificationType)
+        intent.putExtra(BundleKey.MatchId.toString(), matchId)
         val pendingIntent = PendingIntent.getActivity(
             this, 0 /* Request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT
         )//PendingIntent.FLAG_ONE_SHOT
@@ -171,19 +165,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val channelId = getString(R.string.default_notification_channel_id)
         val channelName = getString(R.string.default_notification_channel_name)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        /*  val pendingIntent = PendingIntent.getActivity(
-              this, 0, intent,
-              PendingIntent.FLAG_ONE_SHOT
-          )*/
         val bigPictureStyle = NotificationCompat.BigPictureStyle()
         bigPictureStyle.setBigContentTitle(title)
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString())
         bigPictureStyle.bigPicture(bitmap)
-
-        /*val titleValue = DefaultHelper.decrypt(title)
-        val messageValue = DefaultHelper.decrypt(message)*/
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
         val mBuilder = NotificationCompat.Builder(this, channelId).setTicker(title).setWhen(0).setAutoCancel(true).setContentTitle(decrypt(title)).setContentText(decrypt(message)).setContentIntent(pendingIntent).setSound(defaultSoundUri).setStyle(bigPictureStyle).setColor(resources.getColor(R.color.colorPrimary)).setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE).setSmallIcon(R.mipmap.ic_launcher).setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)).setContentText(message)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -194,8 +180,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
             mBuilder.setChannelId(channelId)
         }
-        val notificationID = (Date().time / 1000L % Integer.MAX_VALUE).toInt()
-        notificationManager.notify(notificationID, mBuilder.build())
+        val notificationId = (Date().time / 1000L % Integer.MAX_VALUE).toInt()
+        notificationManager.notify(notificationId, mBuilder.build())
     }
 
 

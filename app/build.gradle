@@ -24,7 +24,7 @@ android {
             minSdkVersion 23
             targetSdkVersion 30
             versionCode 1
-            versionName "1.1.0"
+            versionName "1.1.1"
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         }
     }
@@ -92,6 +92,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
 
     //for Base64 encryption/decryption
     implementation 'commons-codec:commons-codec:1.10'
