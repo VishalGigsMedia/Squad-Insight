@@ -16,6 +16,8 @@ class SplashActivity : AppCompatActivity() {
         mBinding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(mBinding?.root)
         //throw RuntimeException("Test Crash") // Force a crash
+
+
         Timer().schedule(2000) {
             openMainActivity()
         }
@@ -27,7 +29,6 @@ class SplashActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
 
 
 }

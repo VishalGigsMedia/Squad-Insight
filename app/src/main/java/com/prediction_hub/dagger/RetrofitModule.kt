@@ -1,12 +1,12 @@
-package com.project.prediction_hub.dagger
+package com.prediction_hub.dagger
 
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
-import com.project.prediction_hub.BuildConfig
 import com.prediction_hub.common_helper.ConstantHelper
-import com.project.prediction_hub.common_helper.PreferenceHelper
+import com.project.prediction_hub.BuildConfig
+import com.prediction_hub.common_helper.PreferenceHelper
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -26,22 +26,12 @@ class RetrofitModule(val context: Context?, private val baseUrl: String) {
             val original = chain.request()
             var request: Request? = null
             try {
-
                 val sessionManager = PreferenceHelper(context!!)
-                //val authorizationKey = sessionManager.getString(PreferenceHelper.Key.AuthorizationKey.name)
                 val authorizationKey = sessionManager.getJwtToken()
                 request = if (authorizationKey.isEmpty()) {
-                    chain.request().newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .method(original.method, original.body)
-                        .build()
+                    chain.request().newBuilder().addHeader("Content-Type", "application/json").method(original.method, original.body).build()
                 } else {
-                    chain.request().newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader("Authorization", authorizationKey)
-                        .addHeader("x-api-key", authorizationKey)
-                        .method(original.method, original.body)
-                        .build()
+                    chain.request().newBuilder().addHeader("Content-Type", "application/json").addHeader("Authorization", authorizationKey).addHeader("x-api-key", authorizationKey).method(original.method, original.body).build()
                 }
 
             } catch (authFailureError: Exception) {
@@ -80,12 +70,9 @@ class RetrofitModule(val context: Context?, private val baseUrl: String) {
     @Provides
     @Singleton
     internal fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(baseUrl)
+        return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson)).baseUrl(baseUrl)
             //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(okHttpClient)
-            .build()
+            .client(okHttpClient).build()
     }
 
 }

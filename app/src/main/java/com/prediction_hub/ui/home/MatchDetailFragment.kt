@@ -12,14 +12,14 @@ import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.MatchDetailsAdapter
 import com.prediction_hub.ui.home.model.MatchDetailsModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
-import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
-import com.project.prediction_hub.common_helper.DefaultHelper.forceLogout
-import com.project.prediction_hub.common_helper.DefaultHelper.showToast
-import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.forceLogout
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchDetailsBinding
 import javax.inject.Inject
 
@@ -33,15 +33,12 @@ class MatchDetailFragment : Fragment() {
     private var list: ArrayList<MatchDetailsModel.Data.Prediction> = ArrayList()
     private var adapter: MatchDetailsAdapter? = null
 
-
     private lateinit var viewModel: MatchListViewModel
     private var mBinding: FragmentMatchDetailsBinding? = null
     private val binding get() = mBinding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Application.instance?.getComponent()?.inject(this)
         viewModel = ViewModelProvider(this).get(MatchListViewModel::class.java)
@@ -88,34 +85,32 @@ class MatchDetailFragment : Fragment() {
     }
 
     private fun getMatchDetails(matchId: String, matchType: String) {
-        viewModel.getMatchDetails(context as FragmentActivity, apiService, matchId, matchType)
-            ?.observe(viewLifecycleOwner, { matchDetailsModel ->
-                if (matchDetailsModel != null) {
-                    if (matchDetailsModel.force_logout != ConstantHelper.forceLogout) {
-                        forceLogout(context as FragmentActivity, "")
+        viewModel.getMatchDetails(context as FragmentActivity, apiService, matchId, matchType)?.observe(viewLifecycleOwner, { matchDetailsModel ->
+            if (matchDetailsModel != null) {
+                if (matchDetailsModel.force_logout != ConstantHelper.forceLogout) {
+                    forceLogout(context as FragmentActivity, "")
+                }
+                when (matchDetailsModel.status) {
+                    ConstantHelper.success -> {
+                        setMatchDetails(matchDetailsModel.data?.match_details)
+                        if (matchDetailsModel.data?.prediction?.isNotEmpty() == true) {
+                            mBinding?.rvMatchDetails?.visibility = View.VISIBLE
+                            this.list = matchDetailsModel.data.prediction as ArrayList<MatchDetailsModel.Data.Prediction>
+                            adapter?.addData(list)
+                        }
                     }
-                    when (matchDetailsModel.status) {
-                        ConstantHelper.success -> {
-                            setMatchDetails(matchDetailsModel.data?.match_details)
-                            if (matchDetailsModel.data?.prediction?.isNotEmpty() == true) {
-                                mBinding?.rvMatchDetails?.visibility = View.VISIBLE
-                                this.list =
-                                    matchDetailsModel.data.prediction as ArrayList<MatchDetailsModel.Data.Prediction>
-                                adapter?.addData(list)
-                            }
-                        }
-                        ConstantHelper.failed -> {
-                            setNoDataLayout(decrypt(matchDetailsModel.message))
-                        }
-                        ConstantHelper.apiFailed -> {
-                            showToast(context, decrypt(matchDetailsModel.message))
-                        }
-                        ConstantHelper.noInternet -> {
-                            setNoDataLayout(decrypt(matchDetailsModel.message))
-                        }
+                    ConstantHelper.failed -> {
+                        setNoDataLayout(decrypt(matchDetailsModel.message))
+                    }
+                    ConstantHelper.apiFailed -> {
+                        showToast(context, decrypt(matchDetailsModel.message))
+                    }
+                    ConstantHelper.noInternet -> {
+                        setNoDataLayout(decrypt(matchDetailsModel.message))
                     }
                 }
-            })
+            }
+        })
     }
 
     private fun setNoDataLayout(msg: String) {

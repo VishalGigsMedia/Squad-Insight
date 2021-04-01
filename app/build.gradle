@@ -7,27 +7,15 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
-
-    /*defaultConfig {
-        applicationId "com.project.prediction_application"
-        minSdkVersion 23
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }*/
-
     flavorDimensions "version"
-
     productFlavors {
         production {
             dimension "version"
             applicationId 'com.prediction_hub'
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2
-            versionName "1.2"
+            versionCode 1
+            versionName "1.1.0"
         }
 
         devlopment {
@@ -36,7 +24,7 @@ android {
             minSdkVersion 23
             targetSdkVersion 30
             versionCode 1
-            versionName "1.5"
+            versionName "1.1.0"
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         }
     }
@@ -47,10 +35,14 @@ android {
     }
 
     buildTypes {
+        debug {
+
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -63,7 +55,7 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'

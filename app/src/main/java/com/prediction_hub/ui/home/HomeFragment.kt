@@ -9,38 +9,34 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.prediction_hub.MainActivity
+import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment() : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private var mBinding: FragmentHomeBinding? = null
     private val binding get() = mBinding!!
     private var callback: OnCurrentFragmentVisibleListener? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
 
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         callback?.onSetToolbarTitle(true, HomeFragment::class.java.simpleName)
 
+
         setAdapter()
+
     }
 
     fun setOnCurrentFragmentVisibleListener(activity: MainActivity) {
@@ -58,24 +54,11 @@ class HomeFragment : Fragment() {
 
         mBinding?.viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
+                position: Int, positionOffset: Float, positionOffsetPixels: Int
             ) {
             }
 
             override fun onPageSelected(position: Int) {
-                /*when (position) {
-                    0 -> {
-                        CricketMatchListFragment()
-                    }
-                    1 -> {
-                        FootballMatchListFragment()
-                    }
-                    2 -> {
-                        BasketballMatchListFragment()
-                    }
-                }*/
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -87,8 +70,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    class ViewPagerAdapter(fragmentManager: FragmentManager, val context: Context) :
-        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    class ViewPagerAdapter(fragmentManager: FragmentManager, val context: Context) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 
         override fun getItem(position: Int): Fragment {

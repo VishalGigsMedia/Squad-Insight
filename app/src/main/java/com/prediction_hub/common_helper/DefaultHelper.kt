@@ -1,4 +1,4 @@
-package com.project.prediction_hub.common_helper
+package com.prediction_hub.common_helper
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,10 +14,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.project.prediction_hub.BuildConfig
 import com.prediction_hub.MainActivity
-import com.prediction_hub.common_helper.Application
-import com.prediction_hub.common_helper.ConstantHelper
+import com.project.prediction_hub.BuildConfig
 import com.project.prediction_hub.R
 import org.apache.commons.codec.binary.Base64
 import javax.crypto.Cipher
@@ -95,12 +93,9 @@ object DefaultHelper {
         return try {
             val base64 = Base64()
             val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-            val secretKey =
-                SecretKeySpec(ConstantHelper.secretKey.toByteArray(charset("UTF-8")), "AES")
+            val secretKey = SecretKeySpec(ConstantHelper.secretKey.toByteArray(charset("UTF-8")), "AES")
             val initializeVectorKey = IvParameterSpec(
-                ConstantHelper.initializeVectorKey.toByteArray(charset("UTF-8")),
-                0,
-                cipher.blockSize
+                ConstantHelper.initializeVectorKey.toByteArray(charset("UTF-8")), 0, cipher.blockSize
             )
             cipher.init(Cipher.DECRYPT_MODE, secretKey, initializeVectorKey)
             //decrypt
@@ -116,14 +111,10 @@ object DefaultHelper {
         val base64 = Base64()
         val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
 
-        val secretKey =
-            SecretKeySpec(ConstantHelper.secretKey.toByteArray(charset("UTF-8")), "AES")
-        val initializeVectorKey =
-            IvParameterSpec(
-                ConstantHelper.initializeVectorKey.toByteArray(charset("UTF-8")),
-                0,
-                cipher.blockSize
-            )
+        val secretKey = SecretKeySpec(ConstantHelper.secretKey.toByteArray(charset("UTF-8")), "AES")
+        val initializeVectorKey = IvParameterSpec(
+            ConstantHelper.initializeVectorKey.toByteArray(charset("UTF-8")), 0, cipher.blockSize
+        )
 
         //encrypt
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, initializeVectorKey)
@@ -145,25 +136,18 @@ object DefaultHelper {
     }
 
 
-    fun openFragment(context: FragmentActivity?, fragment: Fragment, addToBackStack: Boolean) {
+    fun openFragment(context: FragmentActivity, fragment: Fragment, addToBackStack: Boolean) {
         if (addToBackStack) {
             try {
-                context?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.nav_host_fragment, fragment)
-                    ?.addToBackStack(MainActivity::class.java.simpleName)?.commit()
+                context.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(MainActivity::class.java.simpleName).commit()
             } catch (ile: IllegalStateException) {
-                context?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.nav_host_fragment, fragment)
-                    ?.addToBackStack(MainActivity::class.java.simpleName)
-                    ?.commitAllowingStateLoss()
+                context.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(MainActivity::class.java.simpleName).commitAllowingStateLoss()
             }
         } else {
             try {
-                context?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.nav_host_fragment, fragment)?.commit()
+                context.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commit()
             } catch (ile: IllegalStateException) {
-                context?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.nav_host_fragment, fragment)?.commitAllowingStateLoss()
+                context.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commitAllowingStateLoss()
             }
         }
     }
@@ -171,8 +155,7 @@ object DefaultHelper {
     fun isOnline(): Boolean {
         val haveConnectedWifi = false
         val haveConnectedMobile = false
-        val cm =
-            Application.instance?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = Application.instance?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val netInfo = cm.activeNetwork
         if (netInfo != null) {

@@ -22,9 +22,9 @@ import com.prediction_hub.ui.home.adapter.FootballMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.DefaultHelper
-import com.project.prediction_hub.common_helper.DefaultHelper.decrypt
-import com.project.prediction_hub.common_helper.DefaultHelper.showToast
+import com.prediction_hub.common_helper.DefaultHelper
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
 import javax.inject.Inject
 
@@ -50,9 +50,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     private val binding get() = mBinding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Application.instance?.getComponent()?.inject(this)
         viewModel = ViewModelProvider(this).get(MatchListViewModel::class.java)
@@ -80,8 +78,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     private fun swipeToRefresh() {
         mBinding?.srl?.setProgressBackgroundColorSchemeColor(
             ContextCompat.getColor(
-                context as FragmentActivity,
-                R.color.colorPrimary
+                context as FragmentActivity, R.color.colorPrimary
             )
         )
         mBinding?.srl?.setColorSchemeColors(Color.WHITE)
@@ -105,8 +102,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
         layoutManager = LinearLayoutManager(context)
         mBinding?.rvHome?.layoutManager = layoutManager
         adapter = FootballMatchListAdapter(
-            context as FragmentActivity, list,
-            matchListClickListener as FootballMatchListFragment
+            context as FragmentActivity, list, matchListClickListener as FootballMatchListFragment
         )
         mBinding?.rvHome?.adapter = adapter
         adapter?.notifyDataSetChanged()
@@ -127,8 +123,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     }
 
     private fun showMatchDetailNotFound() {
-        val wrappedContext =
-            ContextThemeWrapper(context, R.style.ThemeOverlay_Demo_BottomSheetDialog)
+        val wrappedContext = ContextThemeWrapper(context, R.style.ThemeOverlay_Demo_BottomSheetDialog)
         val dialog = BottomSheetDialog(wrappedContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -161,47 +156,41 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
         showLoader()
         viewModel.getFootballMatchList(
-            context as FragmentActivity,
-            apiService,
-            offset,
-            nextLimit,
-            fcmToken
-        )
-            ?.observe(viewLifecycleOwner, { matchListModel ->
-                hideLoader()
-                if (matchListModel != null) {
+            context as FragmentActivity, apiService, offset, nextLimit, fcmToken
+        )?.observe(viewLifecycleOwner, { matchListModel ->
+            hideLoader()
+            if (matchListModel != null) {
 
-                    if (matchListModel.force_logout != ConstantHelper.forceLogout) {
-                        DefaultHelper.forceLogout(context as FragmentActivity, "")
-                    }
-
-                    when (matchListModel.status) {
-                        ConstantHelper.success -> {
-                            this.offset = 20
-                            this.list =
-                                matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>
-                            adapter?.addData(this.list)
-
-                            mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
-                            mBinding?.rvHome?.visibility = View.VISIBLE
-
-                        }
-                        ConstantHelper.failed -> {
-                            setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
-                        }
-                        ConstantHelper.apiFailed -> {
-                            showToast(context, decrypt(matchListModel.message.toString()))
-                        }
-                        ConstantHelper.noInternet -> {
-                            setNoDataLayout(matchListModel.message.toString())
-                        }
-                        else -> {
-                            setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
-                        }
-                    }
-
+                if (matchListModel.force_logout != ConstantHelper.forceLogout) {
+                    DefaultHelper.forceLogout(context as FragmentActivity, "")
                 }
-            })
+
+                when (matchListModel.status) {
+                    ConstantHelper.success -> {
+                        this.offset = 20
+                        this.list = matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>
+                        adapter?.addData(this.list)
+
+                        mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
+                        mBinding?.rvHome?.visibility = View.VISIBLE
+
+                    }
+                    ConstantHelper.failed -> {
+                        setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
+                    }
+                    ConstantHelper.apiFailed -> {
+                        showToast(context, decrypt(matchListModel.message.toString()))
+                    }
+                    ConstantHelper.noInternet -> {
+                        setNoDataLayout(matchListModel.message.toString())
+                    }
+                    else -> {
+                        setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
+                    }
+                }
+
+            }
+        })
     }
 
 
@@ -224,53 +213,45 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     }
 
     private fun getMoreMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
-        print("loadMore : Loading More Data !!!.....")
+        // print("loadMore : Loading More Data !!!.....")
         mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.VISIBLE
         viewModel.getFootballMatchList(
-            context as FragmentActivity,
-            apiService,
-            offset,
-            nextLimit,
-            fcmToken
-        )
-            ?.observe(viewLifecycleOwner, { matchListModel ->
-                mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
-                if (matchListModel != null) {
-                    if (matchListModel.force_logout != ConstantHelper.forceLogout) {
-                        DefaultHelper.forceLogout(context as FragmentActivity, "")
-                    }
-
-                    when (matchListModel.status) {
-                        ConstantHelper.success -> {
-                            isLoading = false
-                            this.offset += 20
-                            adapter?.addData(matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>)
-                        }
-                        ConstantHelper.failed -> {
-                            DefaultHelper.showToast(
-                                context,
-                                DefaultHelper.decrypt(matchListModel.message.toString())
-                            )
-                        }
-                        ConstantHelper.apiFailed -> {
-                            DefaultHelper.showToast(
-                                context,
-                                DefaultHelper.decrypt(matchListModel.message.toString())
-                            )
-                        }
-                        ConstantHelper.noInternet -> {
-                            DefaultHelper.showToast(context, matchListModel.message.toString())
-                        }
-                        else -> {
-                            DefaultHelper.showToast(
-                                context,
-                                DefaultHelper.decrypt(matchListModel.message.toString())
-                            )
-                        }
-                    }
-
+            context as FragmentActivity, apiService, offset, nextLimit, fcmToken
+        )?.observe(viewLifecycleOwner, { matchListModel ->
+            mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
+            if (matchListModel != null) {
+                if (matchListModel.force_logout != ConstantHelper.forceLogout) {
+                    DefaultHelper.forceLogout(context as FragmentActivity, "")
                 }
-            })
+
+                when (matchListModel.status) {
+                    ConstantHelper.success -> {
+                        isLoading = false
+                        this.offset += 20
+                        adapter?.addData(matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>)
+                    }
+                    ConstantHelper.failed -> {
+                        DefaultHelper.showToast(
+                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                        )
+                    }
+                    ConstantHelper.apiFailed -> {
+                        DefaultHelper.showToast(
+                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                        )
+                    }
+                    ConstantHelper.noInternet -> {
+                        DefaultHelper.showToast(context, matchListModel.message.toString())
+                    }
+                    else -> {
+                        DefaultHelper.showToast(
+                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                        )
+                    }
+                }
+
+            }
+        })
 
     }
 

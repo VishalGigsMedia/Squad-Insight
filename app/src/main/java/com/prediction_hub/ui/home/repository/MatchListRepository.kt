@@ -10,9 +10,9 @@ import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.model.MatchDetailsModel
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.DefaultHelper.encrypt
-import com.project.prediction_hub.common_helper.DefaultHelper.getDeviceId
-import com.project.prediction_hub.common_helper.DefaultHelper.isOnline
+import com.prediction_hub.common_helper.DefaultHelper.encrypt
+import com.prediction_hub.common_helper.DefaultHelper.getDeviceId
+import com.prediction_hub.common_helper.DefaultHelper.isOnline
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,11 +22,7 @@ class MatchListRepository {
     var matchDetailsModel: MatchDetailsModel? = null
 
     fun getCricketMatchList(
-        context: Context,
-        apiService: APIService,
-        offset: Int,
-        nextLimit: Int,
-        fcmToken: String
+        context: Context, apiService: APIService, offset: Int, nextLimit: Int, fcmToken: String
     ): MutableLiveData<MatchListModel> {
         val mutableLiveData: MutableLiveData<MatchListModel> = MutableLiveData()
 
@@ -35,7 +31,7 @@ class MatchListRepository {
             //println("offset : $offset nextLimit : $nextLimit")
             inputParams.offset = encrypt(offset.toString())
             inputParams.limit = encrypt(nextLimit.toString())
-            inputParams.device_Id = encrypt(getDeviceId(context))
+            inputParams.device_id = encrypt(getDeviceId(context))
             inputParams.fcm_key = encrypt(fcmToken)
             apiService.getCricketMatchList(inputParams).enqueue(object : Callback<MatchListModel> {
                 override fun onResponse(
@@ -75,7 +71,7 @@ class MatchListRepository {
             //println("offset : $offset nextLimit : $nextLimit")
             inputParams.offset = encrypt(offset.toString())
             inputParams.limit = encrypt(nextLimit.toString())
-            inputParams.device_Id = encrypt(getDeviceId(context))
+            inputParams.device_id = encrypt(getDeviceId(context))
             inputParams.fcm_key = encrypt(fcmToken)
             apiService.getFootballMatchList(inputParams).enqueue(object : Callback<MatchListModel> {
                 override fun onResponse(
@@ -116,7 +112,7 @@ class MatchListRepository {
             //println("offset : $offset nextLimit : $nextLimit")
             inputParams.offset = encrypt(offset.toString())
             inputParams.limit = encrypt(nextLimit.toString())
-            inputParams.device_Id = encrypt(getDeviceId(context))
+            inputParams.device_id = encrypt(getDeviceId(context))
             inputParams.fcm_key = encrypt(fcmToken)
             apiService.getBasketballMatchList(inputParams)
                 .enqueue(object : Callback<MatchListModel> {

@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.prediction_hub.common_helper.AppWebViewClients
 import com.prediction_hub.MainActivity
+import com.prediction_hub.common_helper.AppWebViewClients
+import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.FragmentPrivacyPolicyBinding
 
 class PrivacyPolicyFragment : Fragment() {
@@ -20,9 +20,7 @@ class PrivacyPolicyFragment : Fragment() {
     private val binding get() = mBinding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentPrivacyPolicyBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,9 +38,13 @@ class PrivacyPolicyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         callback?.onSetToolbarTitle(true, PrivacyPolicyFragment::class.java.simpleName)
-        setWebViewData()
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        setWebViewData()
+    }
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebViewData() {
         val url = getString(R.string.privacy_policy_url)

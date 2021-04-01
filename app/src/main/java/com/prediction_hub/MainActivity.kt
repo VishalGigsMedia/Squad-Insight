@@ -10,17 +10,19 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.prediction_hub.ui.home.HomeFragment
-import com.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment
-import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.DefaultHelper.hideKeyboard
-import com.project.prediction_hub.common_helper.DefaultHelper.openFragment
-import com.project.prediction_hub.common_helper.DefaultHelper.showToast
-import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
-import com.project.prediction_hub.databinding.ActivityMainBinding
+import com.prediction_hub.common_helper.BundleKey
+import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.prediction_hub.ui.about_us.AboutUsFragment
+import com.prediction_hub.ui.home.HomeFragment
 import com.prediction_hub.ui.home.MatchDetailFragment
+import com.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment
 import com.prediction_hub.ui.terms_condition.TermsConditionFragment
+import com.project.prediction_hub.R
+import com.prediction_hub.common_helper.DefaultHelper.hideKeyboard
+import com.prediction_hub.common_helper.DefaultHelper.openFragment
+import com.prediction_hub.common_helper.DefaultHelper.showToast
+import com.project.prediction_hub.databinding.ActivityMainBinding
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
         init()
         backPressManager()
         manageClickEvents()
+        notification()
     }
 
     private fun init() {
@@ -54,9 +57,59 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
                 openDrawer()
             }
         }
-        openFragment(this, HomeFragment(), false)
     }
 
+    private fun notification() {
+        val intent = intent
+        if (intent != null) {
+
+            when (intent.getStringExtra(BundleKey.NotificationType.toString()).toString()) {
+                ConstantHelper.cricketListing -> {
+                    showMatchDetails(
+                        intent.getStringExtra(BundleKey.MatchId.toString()).toString(), ConstantHelper.cricket
+                    )
+                }
+                ConstantHelper.footballListing -> {
+                    showMatchDetails(
+                        intent.getStringExtra(BundleKey.MatchId.toString()).toString(), ConstantHelper.football
+                    )
+                }
+                ConstantHelper.basketballListing -> {
+                    showMatchDetails(
+                        intent.getStringExtra(BundleKey.MatchId.toString()).toString(), ConstantHelper.basketball
+                    )
+                    /* openFragment(
+                         this,
+                         HomeFragment(
+                             this,
+                             intent.getStringExtra(BundleKey.MatchId.toString()).toString(),
+                             ConstantHelper.basketball
+                         ),
+                         true
+                     )*/
+
+                }
+                else -> {
+                    openFragment(this, HomeFragment(), false)
+                }
+            }
+
+        } else {
+            openFragment(this, HomeFragment(), false)
+        }
+
+    }
+
+    private fun showMatchDetails(matchId: String, matchType: String) {
+        //println("matchId : $matchId  matchType : $matchType")
+        openFragment(this, HomeFragment(), false)
+        val matchDetailFragment = MatchDetailFragment()
+        val bundle = Bundle()
+        bundle.putString(BundleKey.MatchId.toString(), matchId)
+        bundle.putString(BundleKey.MatchType.toString(), matchType)
+        matchDetailFragment.arguments = bundle
+        openFragment(this, matchDetailFragment, true)
+    }
 
     @SuppressLint("WrongConstant")
     private fun openDrawer() {
@@ -161,15 +214,13 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.type = "text/plain"
         shareIntent.putExtra(
-            Intent.EXTRA_TEXT,
-            uri
+            Intent.EXTRA_TEXT, uri
         )
         startActivity(Intent.createChooser(shareIntent, getString(R.string.send_to)))
     }
 
     private var doubleBackToExitPressedOnce = false
     override fun onBackPressed() {
-        //super.onBackPressed()
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
         } else {
@@ -187,6 +238,10 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
         }
         this.doubleBackToExitPressedOnce = true
         showToast(this, getString(R.string.plz_click_back_again_to_exit))
+    }
+
+    private fun getCurrentFragment(): String {
+        return supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.javaClass?.simpleName.toString()
     }
 
 }

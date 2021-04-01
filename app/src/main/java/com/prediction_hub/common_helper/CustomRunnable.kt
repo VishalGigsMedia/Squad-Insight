@@ -8,8 +8,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: String) :
-    Runnable {
+class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: String) : Runnable {
     //var millisUntilFinished: Long = 40000
     @SuppressLint("SimpleDateFormat")
     override fun run() {
@@ -48,20 +47,11 @@ class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: St
             // Calculate time difference in
             // seconds, minutes, hours, years,
             // and days
-            var differenceInSeconds = ((differenceInTime
-                    / 1000)
-                    % 60)
-            var differenceInMinutes = ((differenceInTime
-                    / (1000 * 60))
-                    % 60)
-            var differenceInHours = ((differenceInTime
-                    / (1000 * 60 * 60))
-                    % 24)
-            val differenceInYears = (differenceInTime
-                    / (1000L * 60 * 60 * 24 * 365))
-            val differenceInDays = ((differenceInTime
-                    / (1000 * 60 * 60 * 24))
-                    % 365)
+            var differenceInSeconds = ((differenceInTime / 1000) % 60)
+            var differenceInMinutes = ((differenceInTime / (1000 * 60)) % 60)
+            var differenceInHours = ((differenceInTime / (1000 * 60 * 60)) % 24)
+            val differenceInYears = (differenceInTime / (1000L * 60 * 60 * 24 * 365))
+            val differenceInDays = ((differenceInTime / (1000 * 60 * 60 * 24)) % 365)
 
             // Print the date difference in
             // years, in days, in hours, in

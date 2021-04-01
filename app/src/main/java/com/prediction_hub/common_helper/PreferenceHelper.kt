@@ -1,9 +1,8 @@
-package com.project.prediction_hub.common_helper
+package com.prediction_hub.common_helper
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.prediction_hub.common_helper.ConstantHelper
 import okhttp3.Cookie
 import java.util.*
 
@@ -26,10 +25,7 @@ open class PreferenceHelper(context: Context) {
     }
 
     enum class Key {
-        UserLoggedIn,
-        AuthorizationKey,
-        UserId,
-        FcmToken
+        UserLoggedIn, AuthorizationKey, UserId, FcmToken
 
     }
 

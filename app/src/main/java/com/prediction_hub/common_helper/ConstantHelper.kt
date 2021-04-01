@@ -12,11 +12,19 @@ object ConstantHelper {
     const val apiFailed = 2
     const val noInternet = 3
 
-    const val dateFormat= "dd-MM-yyyy HH:mm:ss"
-    const val serverSideFormat= "yyyy-MM-dd HH:mm:ss"
+    const val dateFormat = "dd-MM-yyyy HH:mm:ss"
+    const val serverSideFormat = "yyyy-MM-dd HH:mm:ss"
 
     const val serverReadTimeOut = 60
     const val serverConnectTimeOut = 60
+
+    const val cricketListing = "Cricket Listing"
+    const val footballListing = "Football Listing"
+    const val basketballListing = "Basketball Listing"
+
+    const val cricket = "cricket"
+    const val football = "football"
+    const val basketball = "basketball"
 
 
 }

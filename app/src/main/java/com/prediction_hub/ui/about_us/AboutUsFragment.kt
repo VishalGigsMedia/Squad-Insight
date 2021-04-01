@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.AppWebViewClients
+import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.R
-import com.project.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.databinding.FragmentAboutUsBinding
 
 class AboutUsFragment : Fragment() {
@@ -21,9 +21,7 @@ class AboutUsFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentAboutUsBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,11 +30,16 @@ class AboutUsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         callback?.onSetToolbarTitle(true, AboutUsFragment::class.java.simpleName)
-        setWebViewData()
+
     }
 
     fun setOnCurrentFragmentVisibleListener(activity: MainActivity) {
         callback = activity
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setWebViewData()
     }
 
     override fun onDestroyView() {
@@ -48,8 +51,7 @@ class AboutUsFragment : Fragment() {
     private fun setWebViewData() {
         val url = getString(R.string.about_us_url)
         mBinding?.webView?.settings?.javaScriptEnabled = true
-        mBinding?.webView?.webViewClient =
-            AppWebViewClients(mBinding?.clProgressBar?.clProgressBarParent!!)
+        mBinding?.webView?.webViewClient = AppWebViewClients(mBinding?.clProgressBar?.clProgressBarParent!!)
         mBinding?.webView?.loadUrl(url)
     }
 }

@@ -8,22 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.common_helper.CustomRunnable
 import com.prediction_hub.ui.home.FootballMatchListFragment
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.ConstantHelper
-import com.project.prediction_hub.common_helper.DefaultHelper
+import com.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.databinding.RowItemMatchListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FootballMatchListAdapter(
-    private val context: Context,
-    private val list: ArrayList<MatchListModel.Data.Match>,
-    private val matchListClickListener: FootballMatchListFragment
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val context: Context, private val list: ArrayList<MatchListModel.Data.Match>, private val matchListClickListener: FootballMatchListFragment
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     lateinit var mcontext: Context
     var customRunnable: CustomRunnable? = null
@@ -54,9 +51,7 @@ class FootballMatchListAdapter(
         mcontext = viewGroup.context
 
         val view = LayoutInflater.from(viewGroup.context).inflate(
-            R.layout.row_item_match_list,
-            viewGroup,
-            false
+            R.layout.row_item_match_list, viewGroup, false
         )
         return ItemViewHolder(view)
     }
@@ -67,37 +62,28 @@ class FootballMatchListAdapter(
 
             try {
                 if (DefaultHelper.decrypt(list[position].title).isNotEmpty()) {
-                    holder.itemOffersBinding.tvTitle.text =
-                        DefaultHelper.decrypt(list[position].title)
+                    holder.itemOffersBinding.tvTitle.text = DefaultHelper.decrypt(list[position].title)
                 }
 
                 if (DefaultHelper.decrypt(list[position].team1.short_name).isNotEmpty()) {
-                    holder.itemOffersBinding.tvFirstTeamName.text =
-                        DefaultHelper.decrypt(list[position].team1.short_name)
+                    holder.itemOffersBinding.tvFirstTeamName.text = DefaultHelper.decrypt(list[position].team1.short_name)
                 }
 
                 if (DefaultHelper.decrypt(list[position].team2.short_name).isNotEmpty()) {
-                    holder.itemOffersBinding.tvSecondTeamName.text =
-                        DefaultHelper.decrypt(list[position].team2.short_name)
+                    holder.itemOffersBinding.tvSecondTeamName.text = DefaultHelper.decrypt(list[position].team2.short_name)
                 }
 
                 if (DefaultHelper.decrypt(list[position].team1.logo).isNotEmpty()) {
-                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team1.logo))
-                        .centerCrop()
-                        .into(holder.itemOffersBinding.ivFirstTeam)
+                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team1.logo)).centerCrop().into(holder.itemOffersBinding.ivFirstTeam)
                 }
 
                 if (DefaultHelper.decrypt(list[position].team2.logo).isNotEmpty()) {
-                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team2.logo))
-                        .centerCrop()
-                        .into(holder.itemOffersBinding.ivSecondTeam)
+                    Glide.with(context).load(DefaultHelper.decrypt(list[position].team2.logo)).centerCrop().into(holder.itemOffersBinding.ivSecondTeam)
                 }
 
                 if (DefaultHelper.decrypt(list[position].match_date).isNotEmpty()) {
-                    val receivedTime =
-                        DefaultHelper.decrypt(list[position].match_date) //"25-03-2021 14:05:00"
-                    val reformattedStr: String =
-                        formatter.format(serverSideFormat.parse(receivedTime))
+                    val receivedTime = DefaultHelper.decrypt(list[position].match_date) //"25-03-2021 14:05:00"
+                    val reformattedStr: String = formatter.format(serverSideFormat.parse(receivedTime))
                     /*if (position < 2) {
                         println("reformattedStr: $reformattedStr")
                     }*/
@@ -122,17 +108,14 @@ class FootballMatchListAdapter(
                     if (differenceInDays.toInt() == 0) //only start when difference is less than 24 hrs
                     {
                         if (receivedMillis > curMillis) {
-                            customRunnable =
-                                CustomRunnable(
-                                    handler,
-                                    holder.itemOffersBinding.tvVs,
-                                    reformattedStr
-                                )
+                            customRunnable = CustomRunnable(
+                                handler, holder.itemOffersBinding.tvVs, reformattedStr
+                            )
                             handler.removeCallbacks(customRunnable!!)
                             customRunnable!!.holder = holder.itemOffersBinding.tvVs
                             handler.postDelayed(customRunnable!!, 100)
                         } else {
-                            val remainingDays = "$differenceInDays days"
+                            val remainingDays = "Ongoing"
                             holder.itemOffersBinding.tvVs.text = remainingDays
                         }
                     } else if (differenceInDays.toInt() > 0) {
@@ -147,7 +130,9 @@ class FootballMatchListAdapter(
 
                 holder.itemOffersBinding.cvParent.setOnClickListener {
                     if (DefaultHelper.decrypt(list[position].match_details_available) == "1") {
-                        matchListClickListener.onMatchClick(list[position].id, "football")
+                        matchListClickListener.onMatchClick(
+                            list[position].id, ConstantHelper.football
+                        )
                     } else {
                         matchListClickListener.onShowErrorDialog()
                     }

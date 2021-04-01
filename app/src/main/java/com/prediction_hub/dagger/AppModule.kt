@@ -1,4 +1,4 @@
-package com.project.prediction_hub.dagger
+package com.prediction_hub.dagger
 
 
 import com.prediction_hub.common_helper.Application

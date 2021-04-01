@@ -16,66 +16,37 @@ class MatchListViewModel : ViewModel() {
 
 
     fun getCricketMatchList(
-        context: Context,
-        apiService: APIService,
-        offset: Int,
-        nextLimit: Int,
-        fcmToken: String
+        context: Context, apiService: APIService, offset: Int, nextLimit: Int, fcmToken: String
     ): LiveData<MatchListModel>? {
-        matchListModel =
-            matchListRepository.getCricketMatchList(
-                context,
-                apiService,
-                offset,
-                nextLimit,
-                fcmToken
-            )
+        matchListModel = matchListRepository.getCricketMatchList(
+            context, apiService, offset, nextLimit, fcmToken
+        )
         return matchListModel
     }
 
 
     fun getFootballMatchList(
-        context: Context,
-        apiService: APIService,
-        offset: Int,
-        nextLimit: Int,
-        fcmToken: String
+        context: Context, apiService: APIService, offset: Int, nextLimit: Int, fcmToken: String
     ): LiveData<MatchListModel>? {
         matchListModel = matchListRepository.getFootballMatchList(
-            context,
-            apiService,
-            offset,
-            nextLimit,
-            fcmToken
+            context, apiService, offset, nextLimit, fcmToken
         )
         return matchListModel
     }
 
     fun getBasketballMatchList(
-        context: Context,
-        apiService: APIService,
-        offset: Int,
-        nextLimit: Int,
-        fcmToken: String
+        context: Context, apiService: APIService, offset: Int, nextLimit: Int, fcmToken: String
     ): LiveData<MatchListModel>? {
         matchListModel = matchListRepository.getBasketballMatchList(
-            context,
-            apiService,
-            offset,
-            nextLimit,
-            fcmToken
+            context, apiService, offset, nextLimit, fcmToken
         )
         return matchListModel
     }
 
     fun getMatchDetails(
-        context: Context,
-        apiService: APIService,
-        matchId: String,
-        matchType: String
+        context: Context, apiService: APIService, matchId: String, matchType: String
     ): LiveData<MatchDetailsModel>? {
-        matchDetailsModel =
-            matchListRepository.getMatchDetails(context, apiService, matchId, matchType)
+        matchDetailsModel = matchListRepository.getMatchDetails(context, apiService, matchId, matchType)
         return matchDetailsModel
     }
 
