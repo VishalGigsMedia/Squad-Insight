@@ -1,34 +1,48 @@
 package com.prediction_hub
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.hideKeyboard
+import com.prediction_hub.common_helper.DefaultHelper.openFragment
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
+import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.about_us.AboutUsFragment
 import com.prediction_hub.ui.home.HomeFragment
 import com.prediction_hub.ui.home.MatchDetailFragment
 import com.prediction_hub.ui.privacy_policy.PrivacyPolicyFragment
 import com.prediction_hub.ui.terms_condition.TermsConditionFragment
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.DefaultHelper.hideKeyboard
-import com.prediction_hub.common_helper.DefaultHelper.openFragment
-import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.ActivityMainBinding
 import java.util.*
+import javax.inject.Inject
 import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
+    @Inject
+    lateinit var apiService: APIService
 
+    private lateinit var viewModel: UpdateVersionViewModel
     private var mBinding: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +57,9 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
     }
 
     private fun init() {
+        viewModel = ViewModelProvider(this).get(UpdateVersionViewModel::class.java)
+        Application.instance?.getComponent()?.inject(this)
+
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
         setSupportActionBar(mBinding?.appBarMain?.toolbar)
         mBinding?.appBarMain?.toolbar?.setNavigationIcon(R.drawable.ic_menu_24)
@@ -57,6 +74,9 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
                 openDrawer()
             }
         }
+
+        val applicationName = mBinding?.navView?.tvAppName?.text.toString() + " : " + getVersionName()
+        mBinding?.navView?.tvAppName?.text = applicationName
     }
 
     private fun notification() {
@@ -243,5 +263,108 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
     private fun getCurrentFragment(): String {
         return supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.javaClass?.simpleName.toString()
     }
+
+    override fun onResume() {
+        super.onResume()
+        checkAppVersion()
+    }
+
+    private fun checkAppVersion() {
+        viewModel.checkVersion(this, apiService, getVersionCode()).observe(this, { updateApplicationModel ->
+            if (updateApplicationModel != null) {
+                when (updateApplicationModel.status) {
+                    ConstantHelper.success -> {
+                        val checkVersion = decrypt(updateApplicationModel.data?.update_type.toString())
+                        if (checkVersion == "1") {
+                            updateApplicationDialog(false)
+                        } else if (checkVersion == "2") {
+                            updateApplicationDialog(true)
+                        }
+                    }
+
+                    ConstantHelper.failed -> {
+                        showToast(this, decrypt(updateApplicationModel.message))
+                    }
+
+                    ConstantHelper.apiFailed -> {
+                        showToast(this, decrypt(updateApplicationModel.message))
+                    }
+                    ConstantHelper.noInternet -> {
+                        showToast(this, decrypt(updateApplicationModel.message))
+                    }
+                }
+            }
+        })
+    }
+
+    private fun getVersionCode(): String {
+        var versionCode: Long = 0
+        try {
+            val pInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+            // version = pInfo.versionName //Version Name
+            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                pInfo.longVersionCode
+            } else {
+                pInfo.versionCode.toLong()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return versionCode.toString()
+    }
+
+
+    private fun getVersionName(): String {
+        var versionName: String = ""
+        try {
+            val pInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+            versionName = pInfo.versionName //Version Name
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return versionName.toString()
+    }
+
+
+    private fun updateApplicationDialog(compulsoryUpdate: Boolean) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.update_application_dialog)
+
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialog.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialog.window!!.attributes = lp
+
+        val txtUpdateApplication = dialog.findViewById(R.id.tvUpdate) as TextView
+        val txtSkipUpdate = dialog.findViewById(R.id.tvSkip) as TextView
+
+        if (compulsoryUpdate) {
+            txtSkipUpdate.visibility = View.GONE
+        } else {
+            txtSkipUpdate.visibility = View.VISIBLE
+        }
+
+        txtSkipUpdate.setOnClickListener {
+            if (dialog.isShowing) {
+                dialog.cancel()
+            }
+        }
+
+        txtUpdateApplication.setOnClickListener {
+            val playStoreUrl = "https://play.google.com/store/apps/details?id=$packageName"
+            println("playStoreUrl : $playStoreUrl")
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
+        dialog.show()
+    }
+
 
 }

@@ -21,6 +21,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/shimmerColor"
             android:gravity="center"
             android:textAllCaps="false"
             android:textColor="@color/gray_500"
@@ -30,15 +31,13 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2nd Test Match Team Prediction" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <View
             android:id="@+id/ivFirstTeam"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:src="@null"
-            app:civ_border_color="@color/gray_500"
-            app:civ_border_width="@dimen/_1sdp"
+            android:background="@drawable/circular_view"
             app:layout_constraintBottom_toTopOf="@+id/tvMatchDetailStatus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
@@ -49,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_5sdp"
+            android:background="@color/shimmerColor"
             android:gravity="start|center_vertical"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
@@ -62,14 +62,15 @@
 
         <TextView
             android:id="@+id/tvVs"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@null"
+            android:background="@color/shimmerColor"
+            android:gravity="center"
             android:textAllCaps="false"
             android:textColor="@color/red_A700"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
+            android:text="@null"
             app:layout_constraintBottom_toTopOf="@+id/tvMatchDetailStatus"
             app:layout_constraintEnd_toStartOf="@+id/tvSecondTeamName"
             app:layout_constraintStart_toEndOf="@+id/tvFirstTeamName"
@@ -82,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@color/shimmerColor"
             android:gravity="end|center_vertical"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
@@ -93,18 +95,18 @@
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
             tools:text="NZ" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+
+        <View
             android:id="@+id/ivSecondTeam"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:src="@null"
-            app:civ_border_color="@color/gray_500"
-            app:civ_border_width="@dimen/_1sdp"
+            android:background="@drawable/circular_view"
             app:layout_constraintBottom_toTopOf="@+id/tvMatchDetailStatus"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
 
         <TextView
             android:id="@+id/tvMatchDetailStatus"
@@ -112,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
+            android:background="@color/shimmerColor"
             android:gravity="end"
             android:textAllCaps="false"
             android:textColor="@color/red_A700"

@@ -3,16 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/colorPrimary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clTop"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_200sdp"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAppLogo"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:src="@drawable/app_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivAppLogo">
+
+        </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -26,7 +53,7 @@
         android:gravity="start"
         android:text="@string/menu_home"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +61,18 @@
         app:layout_constraintTop_toBottomOf="@+id/clTop">
 
     </TextView>
+
+    <View
+        android:id="@+id/viewHome"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/gray_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHome" />
 
     <TextView
         android:id="@+id/tvAboutUs"
@@ -45,14 +84,14 @@
         android:gravity="start"
         android:text="@string/menu_about_us"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         android:textStyle="normal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHome">
+        app:layout_constraintTop_toBottomOf="@+id/viewHome" />
 
-    </TextView>
 
     <TextView
         android:id="@+id/tvRateUs"
@@ -64,14 +103,26 @@
         android:gravity="start"
         android:text="@string/menu_rate_us"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAboutUs">
+        app:layout_constraintTop_toBottomOf="@+id/tvAboutUs" />
 
-    </TextView>
+
+    <View
+        android:id="@+id/viewRateUs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/gray_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRateUs" />
+
 
     <TextView
         android:id="@+id/tvPrivacyPolicy"
@@ -83,14 +134,24 @@
         android:gravity="start"
         android:text="@string/menu_privacy_policy"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRateUs">
+        app:layout_constraintTop_toBottomOf="@+id/viewRateUs" />
 
-    </TextView>
+    <View
+        android:id="@+id/viewPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/gray_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPrivacyPolicy" />
 
     <TextView
         android:id="@+id/tvTnc"
@@ -102,12 +163,12 @@
         android:gravity="start"
         android:text="@string/menu_terms_condition"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPrivacyPolicy">
+        app:layout_constraintTop_toBottomOf="@+id/viewPrivacyPolicy">
 
     </TextView>
 

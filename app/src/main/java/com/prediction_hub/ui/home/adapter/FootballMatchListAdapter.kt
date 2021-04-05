@@ -6,14 +6,15 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.common_helper.CustomRunnable
+import com.prediction_hub.common_helper.DefaultHelper
 import com.prediction_hub.ui.home.FootballMatchListFragment
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.databinding.RowItemMatchListBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -84,10 +85,6 @@ class FootballMatchListAdapter(
                 if (DefaultHelper.decrypt(list[position].match_date).isNotEmpty()) {
                     val receivedTime = DefaultHelper.decrypt(list[position].match_date) //"25-03-2021 14:05:00"
                     val reformattedStr: String = formatter.format(serverSideFormat.parse(receivedTime))
-                    /*if (position < 2) {
-                        println("reformattedStr: $reformattedStr")
-                    }*/
-                    holder.itemOffersBinding.tvVs.text = reformattedStr
 
                     formatter.isLenient = false
                     val curDate = Date()
@@ -127,6 +124,10 @@ class FootballMatchListAdapter(
                     }
                 }
 
+                if (DefaultHelper.decrypt(list[position].match_details_available) == "1") {
+                    holder.itemOffersBinding.tvMatchDetailStatus.text = context.getString(R.string.match_details_available)
+                    holder.itemOffersBinding.tvMatchDetailStatus.setTextColor(ContextCompat.getColor(context, R.color.greenColor))
+                }
 
                 holder.itemOffersBinding.cvParent.setOnClickListener {
                     if (DefaultHelper.decrypt(list[position].match_details_available) == "1") {

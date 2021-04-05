@@ -15,5 +15,7 @@
     <color name="red_A700">#D50000</color>
     <color name="gray_500">#9E9E9E</color>
 
+    <color name="shimmerColor">#dddddd</color>
+    <color name="greenColor">#9E9D24</color>
 
 </resources>

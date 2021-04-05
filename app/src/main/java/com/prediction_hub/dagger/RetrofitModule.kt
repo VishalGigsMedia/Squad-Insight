@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 import com.prediction_hub.common_helper.ConstantHelper
 import com.project.prediction_hub.BuildConfig
-import com.prediction_hub.common_helper.PreferenceHelper
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -26,8 +25,9 @@ class RetrofitModule(val context: Context?, private val baseUrl: String) {
             val original = chain.request()
             var request: Request? = null
             try {
-                val sessionManager = PreferenceHelper(context!!)
-                val authorizationKey = sessionManager.getJwtToken()
+                /*val sessionManager = PreferenceHelper(context!!)
+                val authorizationKey = sessionManager.getJwtToken()*/
+                val authorizationKey = ConstantHelper.authorizationToken
                 request = if (authorizationKey.isEmpty()) {
                     chain.request().newBuilder().addHeader("Content-Type", "application/json").method(original.method, original.body).build()
                 } else {

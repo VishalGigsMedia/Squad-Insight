@@ -1,7 +1,7 @@
 package com.prediction_hub.ui.home.model
 
 data class MatchListModel(
-    val data: Data?, val force_logout: Int, val message: Any?, val status: Int
+    val data: Data?, val force_logout: Int, val message: String?, val status: Int
 ) {
     data class Data(
         val match_list: List<Match>

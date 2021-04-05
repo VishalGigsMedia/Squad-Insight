@@ -17,14 +17,14 @@ import com.google.firebase.messaging.ktx.messaging
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.DefaultHelper
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.FootballMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.DefaultHelper
-import com.prediction_hub.common_helper.DefaultHelper.decrypt
-import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
 import javax.inject.Inject
 
@@ -66,13 +66,13 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     @SuppressLint("SimpleDateFormat")
     private fun init() {
         this.matchListClickListener = this
-
     }
 
     override fun onResume() {
         super.onResume()
         swipeToRefresh()
         initRefreshData()
+
     }
 
     private fun swipeToRefresh() {
@@ -93,6 +93,8 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
         this.list.clear()
         this.offset = 0
         this.nextLimit = 20
+
+        showShimmerLayout()
         setAdapter()
         getFcmToken()
         addScrollListener()
@@ -154,13 +156,14 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     }
 
     private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
-        showLoader()
+        //showLoader()
         viewModel.getFootballMatchList(
             context as FragmentActivity, apiService, offset, nextLimit, fcmToken
         )?.observe(viewLifecycleOwner, { matchListModel ->
-            hideLoader()
+            //hideLoader()
             if (matchListModel != null) {
-
+                mBinding?.shimmerFrameLayout?.stopShimmer()
+                mBinding?.shimmerFrameLayout?.visibility = View.GONE
                 if (matchListModel.force_logout != ConstantHelper.forceLogout) {
                     DefaultHelper.forceLogout(context as FragmentActivity, "")
                 }
@@ -176,7 +179,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
 
                     }
                     ConstantHelper.failed -> {
-                        setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
+                        setNoDataLayout(decrypt(matchListModel.message.toString()))
                     }
                     ConstantHelper.apiFailed -> {
                         showToast(context, decrypt(matchListModel.message.toString()))
@@ -185,7 +188,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
                         setNoDataLayout(matchListModel.message.toString())
                     }
                     else -> {
-                        setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
+                        setNoDataLayout(decrypt(matchListModel.message.toString()))
                     }
                 }
 
@@ -232,12 +235,12 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
                     }
                     ConstantHelper.failed -> {
                         DefaultHelper.showToast(
-                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                            context, decrypt(matchListModel.message.toString())
                         )
                     }
                     ConstantHelper.apiFailed -> {
                         DefaultHelper.showToast(
-                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                            context, decrypt(matchListModel.message.toString())
                         )
                     }
                     ConstantHelper.noInternet -> {
@@ -245,7 +248,7 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
                     }
                     else -> {
                         DefaultHelper.showToast(
-                            context, DefaultHelper.decrypt(matchListModel.message.toString())
+                            context, decrypt(matchListModel.message.toString())
                         )
                     }
                 }
@@ -258,9 +261,15 @@ class FootballMatchListFragment : Fragment(), FootballMatchListAdapter.MatchList
     private fun setNoDataLayout(msg: String) {
         if (msg.isNotEmpty()) {
             mBinding?.rvHome?.visibility = View.GONE
-            mBinding?.clNoData?.tvNoDataLayout?.text = DefaultHelper.decrypt(msg)
+            mBinding?.clNoData?.tvNoDataLayout?.text = decrypt(msg)
             mBinding?.clNoData?.clNoDataParent?.visibility = View.VISIBLE
         }
+    }
+
+    private fun showShimmerLayout() {
+        mBinding?.shimmerFrameLayout?.startShimmer()
+        mBinding?.shimmerFrameLayout?.visibility = View.VISIBLE
+        mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
     }
 
     private fun showLoader() {

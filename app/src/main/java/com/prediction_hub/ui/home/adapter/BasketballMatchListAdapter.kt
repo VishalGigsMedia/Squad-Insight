@@ -6,6 +6,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.prediction_hub.common_helper.ConstantHelper
@@ -84,10 +85,6 @@ class BasketballMatchListAdapter(
                 if (DefaultHelper.decrypt(list[position].match_date).isNotEmpty()) {
                     val receivedTime = DefaultHelper.decrypt(list[position].match_date) //"25-03-2021 14:05:00"
                     val reformattedStr: String = formatter.format(serverSideFormat.parse(receivedTime))
-                    /*if (position < 2) {
-                        println("reformattedStr: $reformattedStr")
-                    }*/
-                    holder.itemOffersBinding.tvVs.text = reformattedStr
 
                     formatter.isLenient = false
                     val curDate = Date()
@@ -125,6 +122,11 @@ class BasketballMatchListAdapter(
                     } else {
                         holder.itemOffersBinding.tvVs.visibility = View.GONE
                     }
+                }
+
+                if (DefaultHelper.decrypt(list[position].match_details_available) == "1") {
+                    holder.itemOffersBinding.tvMatchDetailStatus.text = context.getString(R.string.match_details_available)
+                    holder.itemOffersBinding.tvMatchDetailStatus.setTextColor(ContextCompat.getColor(context,R.color.greenColor))
                 }
 
                 holder.itemOffersBinding.cvParent.setOnClickListener {

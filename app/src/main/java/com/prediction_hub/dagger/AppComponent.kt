@@ -1,5 +1,6 @@
 package com.prediction_hub.dagger
 
+import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.ui.home.BasketballMatchListFragment
 import com.prediction_hub.ui.home.CricketMatchListFragment
@@ -24,5 +25,7 @@ interface AppComponent {
     fun inject(basketballMatchListFragment: BasketballMatchListFragment)
 
     fun inject(matchDetailFragment: MatchDetailFragment)
+
+    fun inject(mainActivity: MainActivity)
 
 }

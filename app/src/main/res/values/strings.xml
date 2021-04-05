@@ -46,4 +46,7 @@
     <string name="skip">Skip >>></string>
     <string name="update">Update</string>
 
+    <string name="match_details_available">Match Details Available</string>
+    <string name="match_details_not_available">Match Details Not Available</string>
+
 </resources>

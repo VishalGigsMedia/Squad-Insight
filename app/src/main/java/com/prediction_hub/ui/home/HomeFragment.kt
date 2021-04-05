@@ -26,17 +26,12 @@ class HomeFragment() : Fragment() {
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         callback?.onSetToolbarTitle(true, HomeFragment::class.java.simpleName)
-
-
         setAdapter()
-
     }
 
     fun setOnCurrentFragmentVisibleListener(activity: MainActivity) {
@@ -105,12 +100,10 @@ class HomeFragment() : Fragment() {
 
         }
 
-
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
     }
-
 
 }

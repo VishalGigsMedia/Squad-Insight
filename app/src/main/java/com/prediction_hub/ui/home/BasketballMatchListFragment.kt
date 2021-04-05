@@ -17,12 +17,12 @@ import com.google.firebase.messaging.ktx.messaging
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.DefaultHelper
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.BasketballMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.DefaultHelper
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
 import javax.inject.Inject
 
@@ -64,7 +64,6 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
     @SuppressLint("SimpleDateFormat")
     private fun init() {
         this.matchListClickListener = this
-
     }
 
     override fun onResume() {
@@ -92,6 +91,7 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
         this.offset = 0
         this.nextLimit = 20
         setAdapter()
+        showShimmerLayout()
         getFcmToken()
         addScrollListener()
     }
@@ -152,12 +152,14 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
     }
 
     private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
-        showLoader()
+        //showLoader()
         viewModel.getBasketballMatchList(
             context as FragmentActivity, apiService, offset, nextLimit, fcmToken
         )?.observe(viewLifecycleOwner, { matchListModel ->
-            hideLoader()
+            //hideLoader()
             if (matchListModel != null) {
+                mBinding?.shimmerFrameLayout?.stopShimmer()
+                mBinding?.shimmerFrameLayout?.visibility = View.GONE
 
                 if (matchListModel.force_logout != ConstantHelper.forceLogout) {
                     DefaultHelper.forceLogout(context as FragmentActivity, "")
@@ -269,5 +271,11 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
 
     private fun hideLoader() {
         mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
+    }
+
+    private fun showShimmerLayout() {
+        mBinding?.shimmerFrameLayout?.startShimmer()
+        mBinding?.shimmerFrameLayout?.visibility = View.VISIBLE
+        mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
     }
 }

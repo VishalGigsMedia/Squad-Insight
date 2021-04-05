@@ -24,7 +24,6 @@ class MatchListViewModel : ViewModel() {
         return matchListModel
     }
 
-
     fun getFootballMatchList(
         context: Context, apiService: APIService, offset: Int, nextLimit: Int, fcmToken: String
     ): LiveData<MatchListModel>? {
@@ -49,5 +48,6 @@ class MatchListViewModel : ViewModel() {
         matchDetailsModel = matchListRepository.getMatchDetails(context, apiService, matchId, matchType)
         return matchDetailsModel
     }
+    
 
 }

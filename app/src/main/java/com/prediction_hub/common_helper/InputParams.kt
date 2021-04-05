@@ -8,5 +8,6 @@ class InputParams {
     var device_id: String? = null
     var match_id: String? = null
     var match_type: String? = null
+    var version_code: String? = null
 
 }

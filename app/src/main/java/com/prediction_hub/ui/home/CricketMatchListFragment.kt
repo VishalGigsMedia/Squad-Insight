@@ -17,15 +17,15 @@ import com.google.firebase.messaging.ktx.messaging
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.DefaultHelper
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.forceLogout
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.CricketMatchListAdapter
 import com.prediction_hub.ui.home.model.MatchListModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
 import com.project.prediction_hub.R
-import com.prediction_hub.common_helper.DefaultHelper
-import com.prediction_hub.common_helper.DefaultHelper.decrypt
-import com.prediction_hub.common_helper.DefaultHelper.forceLogout
-import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchListBinding
 import javax.inject.Inject
 
@@ -74,6 +74,7 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
 
     override fun onResume() {
         super.onResume()
+        mBinding?.shimmerFrameLayout?.startShimmer()
         swipeToRefresh()
         initRefreshData()
     }
@@ -97,6 +98,8 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
         this.offset = 0
         this.nextLimit = 20
         setAdapter()
+        mBinding?.shimmerFrameLayout?.startShimmer()
+        mBinding?.shimmerFrameLayout?.visibility = View.VISIBLE
         getFcmToken()
         addScrollListener()
     }
@@ -159,11 +162,11 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
     }
 
     private fun getMatchList(fcmToken: String, offset: Int, nextLimit: Int) {
-        showLoader()
+        //showLoader()
         viewModel.getCricketMatchList(
             context as FragmentActivity, apiService, offset, nextLimit, fcmToken
         )?.observe(viewLifecycleOwner, { matchListModel ->
-            hideLoader()
+            //hideLoader()
             if (matchListModel != null) {
 
                 if (matchListModel.force_logout != ConstantHelper.forceLogout) {
@@ -176,11 +179,15 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
                         this.list = matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>
                         adapter?.addData(this.list)
 
+                        mBinding?.shimmerFrameLayout?.stopShimmer()
+                        mBinding?.shimmerFrameLayout?.visibility = View.GONE
                         mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
                         mBinding?.rvHome?.visibility = View.VISIBLE
 
                     }
                     ConstantHelper.failed -> {
+                        mBinding?.shimmerFrameLayout?.stopShimmer()
+                        mBinding?.shimmerFrameLayout?.visibility = View.GONE
                         setNoDataLayout(decrypt(matchListModel.message.toString()))
                     }
                     ConstantHelper.apiFailed -> {
@@ -270,4 +277,9 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
         mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
     }
 
+
+    override fun onPause() {
+        mBinding?.shimmerFrameLayout?.stopShimmer()
+        super.onPause()
+    }
 }
