@@ -12,14 +12,14 @@ import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.Application
 import com.prediction_hub.common_helper.BundleKey
 import com.prediction_hub.common_helper.ConstantHelper
+import com.prediction_hub.common_helper.DefaultHelper.decrypt
+import com.prediction_hub.common_helper.DefaultHelper.forceLogout
+import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.MatchDetailsAdapter
 import com.prediction_hub.ui.home.model.MatchDetailsModel
 import com.prediction_hub.ui.home.view_model.MatchListViewModel
-import com.prediction_hub.common_helper.DefaultHelper.decrypt
-import com.prediction_hub.common_helper.DefaultHelper.forceLogout
-import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.project.prediction_hub.databinding.FragmentMatchDetailsBinding
 import javax.inject.Inject
 
@@ -100,6 +100,9 @@ class MatchDetailFragment : Fragment() {
                         }
                     }
                     ConstantHelper.failed -> {
+                        setNoDataLayout(decrypt(matchDetailsModel.message))
+                    }
+                    ConstantHelper.authorizationFailed -> {
                         setNoDataLayout(decrypt(matchDetailsModel.message))
                     }
                     ConstantHelper.apiFailed -> {

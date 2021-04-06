@@ -275,6 +275,7 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
                 when (updateApplicationModel.status) {
                     ConstantHelper.success -> {
                         val checkVersion = decrypt(updateApplicationModel.data?.update_type.toString())
+                        //val checkVersion = "1"
                         if (checkVersion == "1") {
                             updateApplicationDialog(false)
                         } else if (checkVersion == "2") {

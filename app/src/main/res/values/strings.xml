@@ -11,7 +11,7 @@
     <string name="menu_about_us">About us</string>
     <string name="menu_rate_us">Rate us</string>
     <string name="menu_privacy_policy">Privacy Policy</string>
-    <string name="menu_terms_condition">Terms Condition</string>
+    <string name="menu_terms_condition">Terms &amp; Condition</string>
 
     <string name="toolbar_cricket">Cricket</string>
     <string name="toolbar_football">Football</string>
@@ -40,7 +40,7 @@
     <string name="plz_click_back_again_to_exit">Please click BACK again to exit</string>
 
     <string name="dismiss">Dismiss</string>
-    <string name="err_msg_match_not_available">Decision for covering this match is not decided by the admin. Please check again after some time.</string>
+    <string name="err_msg_match_not_available">Match detail will be available soon, you will get notified when match detail is available. </string>
 
     <string name="update_available">Update Available</string>
     <string name="skip">Skip >>></string>
@@ -48,5 +48,7 @@
 
     <string name="match_details_available">Match Details Available</string>
     <string name="match_details_not_available">Match Details Not Available</string>
+
+    <string name="match_ongoing">Ongoing</string>
 
 </resources>

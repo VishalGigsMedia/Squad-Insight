@@ -1,14 +1,17 @@
 package com.prediction_hub.common_helper
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Handler
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.prediction_hub.common_helper.ConstantHelper.dateFormat
+import com.project.prediction_hub.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: String) : Runnable {
+class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: String, val context: Context) : Runnable {
     //var millisUntilFinished: Long = 40000
     @SuppressLint("SimpleDateFormat")
     override fun run() {
@@ -72,7 +75,9 @@ class CustomRunnable(var handler: Handler, var holder: TextView, var endDate: St
             if (differenceInHours.toInt() == 0 && differenceInMinutes.toInt() == 0 && differenceInSeconds.toInt() == 0) {
                 handler.removeCallbacksAndMessages(true)
                 //millisUntilFinished = 0
-                holder.text = "Match is ongoing"
+                holder.text = context.getString(R.string.match_ongoing)
+                holder.setTextColor(ContextCompat.getColor(context, R.color.greenColor))
+
             } else {
                 var hrs = ""
                 var minutes = ""

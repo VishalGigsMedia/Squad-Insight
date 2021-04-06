@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.prediction_hub.MainActivity
 import com.prediction_hub.common_helper.AppWebViewClients
+import com.prediction_hub.common_helper.DefaultHelper.isOnline
 import com.prediction_hub.common_helper.OnCurrentFragmentVisibleListener
 import com.project.prediction_hub.R
 import com.project.prediction_hub.databinding.FragmentPrivacyPolicyBinding
@@ -43,13 +44,26 @@ class PrivacyPolicyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setWebViewData()
+        if (isOnline()) {
+            setWebViewData()
+        } else {
+            setNoDataLayout(getString(R.string.no_internet))
+        }
     }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebViewData() {
         val url = getString(R.string.privacy_policy_url)
         mBinding?.webView?.settings?.javaScriptEnabled = true
         mBinding?.webView?.webViewClient = AppWebViewClients(mBinding?.clProgressBar?.clProgressBarParent!!)
         mBinding?.webView?.loadUrl(url)
+    }
+
+    private fun setNoDataLayout(msg: String) {
+        if (msg.isNotEmpty()) {
+            mBinding?.webView?.visibility = View.GONE
+            mBinding?.clNoData?.tvNoDataLayout?.text = msg
+            mBinding?.clNoData?.clNoDataParent?.visibility = View.VISIBLE
+        }
     }
 }

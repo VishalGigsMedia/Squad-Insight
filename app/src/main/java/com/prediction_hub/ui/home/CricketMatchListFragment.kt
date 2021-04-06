@@ -3,7 +3,12 @@ package com.prediction_hub.ui.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,6 +25,7 @@ import com.prediction_hub.common_helper.ConstantHelper
 import com.prediction_hub.common_helper.DefaultHelper
 import com.prediction_hub.common_helper.DefaultHelper.decrypt
 import com.prediction_hub.common_helper.DefaultHelper.forceLogout
+import com.prediction_hub.common_helper.DefaultHelper.isOnline
 import com.prediction_hub.common_helper.DefaultHelper.showToast
 import com.prediction_hub.retrofit.APIService
 import com.prediction_hub.ui.home.adapter.CricketMatchListAdapter
@@ -69,15 +75,10 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
     @SuppressLint("SimpleDateFormat")
     private fun init() {
         this.matchListClickListener = this
+        //println("isOnline : " + isOnline())
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        mBinding?.shimmerFrameLayout?.startShimmer()
-        swipeToRefresh()
-        initRefreshData()
-    }
 
     private fun swipeToRefresh() {
         mBinding?.srl?.setProgressBackgroundColorSchemeColor(
@@ -89,7 +90,6 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
 
         mBinding?.srl?.setOnRefreshListener {
             initRefreshData()
-            mBinding?.srl?.isRefreshing = false
         }
     }
 
@@ -98,10 +98,28 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
         this.offset = 0
         this.nextLimit = 20
         setAdapter()
+        mBinding?.srl?.isRefreshing = false
+
+        if (isOnline()) {
+            showShimmerLayout()
+            getFcmToken()
+            addScrollListener()
+        } else {
+            hideShimmerLayout()
+            setNoDataLayout(getString(R.string.no_internet))
+        }
+
+    }
+
+    private fun showShimmerLayout() {
+        hideNoDataLayout()
         mBinding?.shimmerFrameLayout?.startShimmer()
         mBinding?.shimmerFrameLayout?.visibility = View.VISIBLE
-        getFcmToken()
-        addScrollListener()
+    }
+
+    private fun hideShimmerLayout() {
+        mBinding?.shimmerFrameLayout?.stopShimmer()
+        mBinding?.shimmerFrameLayout?.visibility = View.GONE
     }
 
     private fun setAdapter() {
@@ -155,7 +173,7 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
             }
             val token = task.result.toString()
             this.fcmToken = token
-            println("fcmToken : $fcmToken")
+            //println("fcmToken : $fcmToken")
             getMatchList(fcmToken, offset, nextLimit)
 
         }).toString()
@@ -167,6 +185,9 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
             context as FragmentActivity, apiService, offset, nextLimit, fcmToken
         )?.observe(viewLifecycleOwner, { matchListModel ->
             //hideLoader()
+            mBinding?.srl?.isRefreshing = false
+            hideShimmerLayout()
+            hideNoDataLayout()
             if (matchListModel != null) {
 
                 if (matchListModel.force_logout != ConstantHelper.forceLogout) {
@@ -178,16 +199,12 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
                         this.offset = 20
                         this.list = matchListModel.data?.match_list as ArrayList<MatchListModel.Data.Match>
                         adapter?.addData(this.list)
-
-                        mBinding?.shimmerFrameLayout?.stopShimmer()
-                        mBinding?.shimmerFrameLayout?.visibility = View.GONE
-                        mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
                         mBinding?.rvHome?.visibility = View.VISIBLE
-
                     }
                     ConstantHelper.failed -> {
-                        mBinding?.shimmerFrameLayout?.stopShimmer()
-                        mBinding?.shimmerFrameLayout?.visibility = View.GONE
+                        setNoDataLayout(decrypt(matchListModel.message.toString()))
+                    }
+                    ConstantHelper.authorizationFailed -> {
                         setNoDataLayout(decrypt(matchListModel.message.toString()))
                     }
                     ConstantHelper.apiFailed -> {
@@ -255,10 +272,8 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
                         showToast(context, decrypt(matchListModel.message.toString()))
                     }
                 }
-
             }
         })
-
     }
 
     private fun setNoDataLayout(msg: String) {
@@ -267,6 +282,11 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
             mBinding?.clNoData?.tvNoDataLayout?.text = decrypt(msg)
             mBinding?.clNoData?.clNoDataParent?.visibility = View.VISIBLE
         }
+    }
+
+    private fun hideNoDataLayout() {
+        mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
+
     }
 
     private fun showLoader() {
@@ -282,4 +302,18 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
         mBinding?.shimmerFrameLayout?.stopShimmer()
         super.onPause()
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (isOnline()) {
+            showShimmerLayout()
+            swipeToRefresh()
+            initRefreshData()
+        } else {
+            hideShimmerLayout()
+            setNoDataLayout(getString(R.string.no_internet))
+        }
+    }
+
+
 }

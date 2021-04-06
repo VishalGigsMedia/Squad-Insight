@@ -106,13 +106,13 @@ class FootballMatchListAdapter(
                     {
                         if (receivedMillis > curMillis) {
                             customRunnable = CustomRunnable(
-                                handler, holder.itemOffersBinding.tvVs, reformattedStr
+                                handler, holder.itemOffersBinding.tvVs, reformattedStr, context
                             )
                             handler.removeCallbacks(customRunnable!!)
                             customRunnable!!.holder = holder.itemOffersBinding.tvVs
                             handler.postDelayed(customRunnable!!, 100)
                         } else {
-                            val remainingDays = "Ongoing"
+                            val remainingDays = context.getString(R.string.match_ongoing)
                             holder.itemOffersBinding.tvVs.text = remainingDays
                         }
                     } else if (differenceInDays.toInt() > 0) {

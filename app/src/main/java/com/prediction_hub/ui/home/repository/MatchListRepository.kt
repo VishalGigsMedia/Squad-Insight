@@ -40,12 +40,6 @@ class MatchListRepository {
                     try {
                         matchListModel = response.body()
                         mutableLiveData.value = matchListModel
-                        /* if (matchListModel?.status == 0) {
-                             matchListModel = MatchListModel(null, 0, matchDetailsModel?.message.toString(), failed)
-                             mutableLiveData.value = matchListModel
-                         } else {
-
-                         }*/
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

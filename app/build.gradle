@@ -6,7 +6,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
     flavorDimensions "version"
     productFlavors {
         production {
@@ -24,7 +24,7 @@ android {
             minSdkVersion 23
             targetSdkVersion 30
             versionCode 1
-            versionName "1.1.2"
+            versionName "1.1.4"
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         }
     }

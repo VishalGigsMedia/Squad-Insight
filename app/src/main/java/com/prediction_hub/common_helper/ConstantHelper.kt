@@ -2,9 +2,9 @@ package com.prediction_hub.common_helper
 
 object ConstantHelper {
 
-    //const val authorizationToken = "Bearer vIgVB7LDfldkFoo08vLMuPQOtAICUFUlNVp4JHZq0zETcy15INxHB9HU4uh+49DQ"
+    const val authorizationToken = "Bearer vIgVB7LDfldkFoo08vLMuPQOtAICUFUlNVp4JHZq0zETcy15INxHB9HU4uh+49DQ"
 
-    const val authorizationToken = "Bearer +49DQ"
+    //const val authorizationToken = "Bearer +49DQ"
     const val secretKey = "KEY51E0678457D96"
     const val initializeVectorKey = "!kQm*fF3pXe1Kbm%"
 
@@ -14,6 +14,9 @@ object ConstantHelper {
     const val forceLogout = 0
     const val apiFailed = 2
     const val noInternet = 3
+    const val authorizationFailed = 4
+
+
 
     const val dateFormat = "dd-MM-yyyy HH:mm:ss"
     const val serverSideFormat = "yyyy-MM-dd HH:mm:ss"

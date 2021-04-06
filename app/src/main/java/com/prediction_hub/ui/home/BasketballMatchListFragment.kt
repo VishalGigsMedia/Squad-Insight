@@ -3,7 +3,12 @@ package com.prediction_hub.ui.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -66,11 +71,6 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
         this.matchListClickListener = this
     }
 
-    override fun onResume() {
-        super.onResume()
-        swipeToRefresh()
-        initRefreshData()
-    }
 
     private fun swipeToRefresh() {
         mBinding?.srl?.setProgressBackgroundColorSchemeColor(
@@ -82,7 +82,6 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
 
         mBinding?.srl?.setOnRefreshListener {
             initRefreshData()
-            mBinding?.srl?.isRefreshing = false
         }
     }
 
@@ -91,9 +90,16 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
         this.offset = 0
         this.nextLimit = 20
         setAdapter()
-        showShimmerLayout()
-        getFcmToken()
-        addScrollListener()
+        mBinding?.srl?.isRefreshing = false
+
+        if (DefaultHelper.isOnline()) {
+            showShimmerLayout()
+            getFcmToken()
+            addScrollListener()
+        } else {
+            hideShimmerLayout()
+            setNoDataLayout(getString(R.string.no_internet))
+        }
     }
 
     private fun setAdapter() {
@@ -157,9 +163,10 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
             context as FragmentActivity, apiService, offset, nextLimit, fcmToken
         )?.observe(viewLifecycleOwner, { matchListModel ->
             //hideLoader()
+            mBinding?.srl?.isRefreshing = false
+            hideShimmerLayout()
+            hideNoDataLayout()
             if (matchListModel != null) {
-                mBinding?.shimmerFrameLayout?.stopShimmer()
-                mBinding?.shimmerFrameLayout?.visibility = View.GONE
 
                 if (matchListModel.force_logout != ConstantHelper.forceLogout) {
                     DefaultHelper.forceLogout(context as FragmentActivity, "")
@@ -176,6 +183,9 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
 
                     }
                     ConstantHelper.failed -> {
+                        setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
+                    }
+                    ConstantHelper.authorizationFailed -> {
                         setNoDataLayout(DefaultHelper.decrypt(matchListModel.message.toString()))
                     }
                     ConstantHelper.apiFailed -> {
@@ -273,9 +283,36 @@ class BasketballMatchListFragment : Fragment(), BasketballMatchListAdapter.Match
         mBinding?.clProgressBar?.clProgressBarParent?.visibility = View.GONE
     }
 
+    override fun onPause() {
+        mBinding?.shimmerFrameLayout?.stopShimmer()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (DefaultHelper.isOnline()) {
+            showShimmerLayout()
+            swipeToRefresh()
+            initRefreshData()
+        } else {
+            hideShimmerLayout()
+            setNoDataLayout(getString(R.string.no_internet))
+        }
+    }
+
     private fun showShimmerLayout() {
         mBinding?.shimmerFrameLayout?.startShimmer()
         mBinding?.shimmerFrameLayout?.visibility = View.VISIBLE
+    }
+
+    private fun hideShimmerLayout() {
+        mBinding?.shimmerFrameLayout?.stopShimmer()
+        mBinding?.shimmerFrameLayout?.visibility = View.GONE
+    }
+
+    private fun hideNoDataLayout() {
         mBinding?.clNoData?.clNoDataParent?.visibility = View.GONE
+
     }
 }
