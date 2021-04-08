@@ -11,7 +11,7 @@ android {
     productFlavors {
         production {
             dimension "version"
-            applicationId 'com.prediction_hub'
+            applicationId 'com.squad_insight'
             minSdkVersion 23
             targetSdkVersion 30
             versionCode 1
@@ -20,7 +20,7 @@ android {
 
         devlopment {
             dimension "version"
-            applicationId 'com.prediction_hub'
+            applicationId 'com.squad_insight'
             minSdkVersion 23
             targetSdkVersion 30
             versionCode 1
