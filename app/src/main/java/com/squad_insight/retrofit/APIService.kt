@@ -12,7 +12,7 @@ import retrofit2.http.POST
 
 interface APIService {
 
-    @POST("get_cricket_match_lists")//
+    @POST("get_cricket_match_lists")
     fun getCricketMatchList(@Body inputParams: InputParams): Call<MatchListModel>
 
     @POST("get_football_match_lists")
@@ -21,7 +21,8 @@ interface APIService {
     @POST("get_basketball_match_lists")
     fun getBasketballMatchList(@Body inputParams: InputParams): Call<MatchListModel>
 
-    @POST("get_match_details")
+    //@POST("get_match_details")
+    @POST("get_cricket_match_details")
     fun getMatchDetails(@Body inputParams: InputParams): Call<MatchDetailsModel>
 
     @POST("check_version")

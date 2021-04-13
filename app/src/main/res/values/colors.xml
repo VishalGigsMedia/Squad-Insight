@@ -18,4 +18,7 @@
     <color name="shimmerColor">#dddddd</color>
     <color name="greenColor">#9E9D24</color>
 
+    <color name="standardLinkColor">#0000EE</color>
+    <color name="lightGrey">#A2AEC8</color>
+
 </resources>
