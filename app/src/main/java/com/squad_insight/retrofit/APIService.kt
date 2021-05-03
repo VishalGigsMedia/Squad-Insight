@@ -1,6 +1,7 @@
 package com.squad_insight.retrofit
 
 
+import com.squad_gyan.ui.home.model.TeamDetailsModel
 import com.squad_insight.UpdateApplicationModel
 import com.squad_insight.common_helper.InputParams
 import com.squad_insight.ui.home.model.MatchDetailsModel
@@ -28,4 +29,6 @@ interface APIService {
     @POST("check_version")
     fun checkVersion(@Body inputParams: InputParams): Call<UpdateApplicationModel>
 
+    @POST("get_cricket_fantasy_teams")
+    fun getTeamDetails(@Body inputParams: InputParams): Call<TeamDetailsModel>
 }

@@ -133,11 +133,12 @@ class CricketMatchListFragment : Fragment(), CricketMatchListAdapter.MatchListCl
     }
 
 
-    override fun onMatchClick(id: String, matchType: String) {
-        val matchDetailFragment = MatchDetailFragment()
+    override fun onMatchClick(id: String, matchType: String,toolbarTitle: String) {
+        val matchDetailFragment = MatchDetailsParent()
         val bundle = Bundle()
         bundle.putString(BundleKey.MatchId.toString(), id)
         bundle.putString(BundleKey.MatchType.toString(), matchType)
+        bundle.putString(BundleKey.ToolbarTitle.toString(), toolbarTitle)
         matchDetailFragment.arguments = bundle
         DefaultHelper.openFragment(context as FragmentActivity as FragmentActivity, matchDetailFragment, true)
     }

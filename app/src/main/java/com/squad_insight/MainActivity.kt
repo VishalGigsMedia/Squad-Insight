@@ -25,13 +25,14 @@ import com.squad_insight.common_helper.DefaultHelper.hideKeyboard
 import com.squad_insight.common_helper.DefaultHelper.openFragment
 import com.squad_insight.common_helper.DefaultHelper.showToast
 import com.squad_insight.common_helper.OnCurrentFragmentVisibleListener
+import com.squad_insight.databinding.ActivityMainBinding
 import com.squad_insight.retrofit.APIService
 import com.squad_insight.ui.about_us.AboutUsFragment
 import com.squad_insight.ui.home.HomeFragment
 import com.squad_insight.ui.home.MatchDetailFragment
+import com.squad_insight.ui.home.MatchDetailsParent
 import com.squad_insight.ui.privacy_policy.PrivacyPolicyFragment
 import com.squad_insight.ui.terms_condition.TermsConditionFragment
-import com.squad_insight.databinding.ActivityMainBinding
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
     private fun showMatchDetails(matchId: String, matchType: String) {
         //println("matchId : $matchId  matchType : $matchType")
         openFragment(this, HomeFragment(), false)
-        val matchDetailFragment = MatchDetailFragment()
+        val matchDetailFragment = MatchDetailFragment(matchId, matchType)
         val bundle = Bundle()
         bundle.putString(BundleKey.MatchId.toString(), matchId)
         bundle.putString(BundleKey.MatchType.toString(), matchType)
@@ -186,13 +187,17 @@ class MainActivity : AppCompatActivity(), OnCurrentFragmentVisibleListener {
         if (fragment is AboutUsFragment) fragment.setOnCurrentFragmentVisibleListener(this)
         if (fragment is PrivacyPolicyFragment) fragment.setOnCurrentFragmentVisibleListener(this)
         if (fragment is TermsConditionFragment) fragment.setOnCurrentFragmentVisibleListener(this)
+        if (fragment is MatchDetailsParent) fragment.setOnCurrentFragmentVisibleListener(this)
 
     }
 
-    override fun onSetToolbarTitle(show: Boolean, currentFragmentName: String) {
+    override fun onSetToolbarTitle(show: Boolean, currentFragmentName: String, toolbarTitle: String) {
         when (currentFragmentName) {
             HomeFragment::class.java.simpleName -> {
                 setToolbarName(getString(R.string.menu_home))
+            }
+            MatchDetailsParent::class.java.simpleName -> {
+                setToolbarName(toolbarTitle)
             }
             MatchDetailFragment::class.java.simpleName -> {
                 setToolbarName(getString(R.string.match_details))
